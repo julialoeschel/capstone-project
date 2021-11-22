@@ -1,11 +1,12 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './globals.css';
-import App from './App';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import App from './App'
+import GlobalStyles from './GlobalStyles'
 
 ReactDOM.render(
   <React.StrictMode>
+    <GlobalStyles />
     <App />
   </React.StrictMode>,
   document.querySelector('#app')
-);
+)

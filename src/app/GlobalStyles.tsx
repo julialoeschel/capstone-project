@@ -1,4 +1,4 @@
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from 'styled-components'
 
 const GlobalStyles = createGlobalStyle`
     *,*::before,*::after {
@@ -19,5 +19,5 @@ code {
     monospace;
 }
 
-    `;
-export default GlobalStyles;
+    `
+export default GlobalStyles
