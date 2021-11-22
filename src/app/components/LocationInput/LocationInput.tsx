@@ -18,8 +18,9 @@ export default function LocationInput(): JSX.Element {
         <Form onSubmit={(event) => handleSubmit(event)}>
           <Label>
             Location 1
-            <input
+            <Input
               type="text"
+              placeholder="your first location"
               value={location1}
               onChange={(event) => setLocation1(event.target.value)}
             />
@@ -27,8 +28,9 @@ export default function LocationInput(): JSX.Element {
 
           <Label>
             Location 2
-            <input
+            <Input
               type="text"
+              placeholder="your second location"
               value={location2}
               onChange={(event) => setLocation2(event.target.value)}
             />
@@ -55,6 +57,11 @@ const Label = styled.label`
   display: grid;
   gap: 5px;
 `
+
+const Input = styled.input`
+  max-width: 40em;
+`
+
 const Button = styled.button`
   padding: 10px 20px;
   max-width: 170px;
