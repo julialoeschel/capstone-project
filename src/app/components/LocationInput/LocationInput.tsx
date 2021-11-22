@@ -1,22 +1,40 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 
 export default function LocationInput(): JSX.Element {
+  const [location1, setLocation1] = useState('')
+  const [location2, setLocation2] = useState('')
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    setLocation1('')
+    setLocation2('')
+    console.log(location1, location2)
+  }
+
   return (
     <>
       <Container>
-        <Form>
+        <Form onSubmit={(event) => handleSubmit(event)}>
           <Label>
             Location 1
-            <input type="text" />
+            <input
+              type="text"
+              value={location1}
+              onChange={(event) => setLocation1(event.target.value)}
+            />
           </Label>
 
           <Label>
             Location 2
-            <input type="text" />
+            <input
+              type="text"
+              value={location2}
+              onChange={(event) => setLocation2(event.target.value)}
+            />
           </Label>
+          <Button type="submit">find middle</Button>
         </Form>
-        <Button>find middle</Button>
       </Container>
     </>
   )
