@@ -18,34 +18,32 @@ export default function LocationInput(): JSX.Element {
   }
 
   return (
-    <>
-      <Container>
-        <Form onSubmit={(event) => handleSubmit(event)}>
-          <Label>
-            Location 1
-            <Input
-              type="text"
-              placeholder="your first location"
-              value={location1}
-              onChange={(event) => setLocation1(event.target.value)}
-            />
-            {!location1 ? <Warning>please enter a location</Warning> : ''}
-          </Label>
+    <Container>
+      <Form onSubmit={(event) => handleSubmit(event)}>
+        <Label>
+          Location 1
+          <Input
+            type="text"
+            placeholder="your first location"
+            value={location1}
+            onChange={(event) => setLocation1(event.target.value)}
+          />
+          {!location1 ? <Warning>please enter a location</Warning> : ''}
+        </Label>
 
-          <Label>
-            Location 2
-            <Input
-              type="text"
-              placeholder="your second location"
-              value={location2}
-              onChange={(event) => setLocation2(event.target.value)}
-            />
-            {!location2 ? <Warning>please enter a location</Warning> : ''}
-          </Label>
-          <Button type="submit">find middle</Button>
-        </Form>
-      </Container>
-    </>
+        <Label>
+          Location 2
+          <Input
+            type="text"
+            placeholder="your second location"
+            value={location2}
+            onChange={(event) => setLocation2(event.target.value)}
+          />
+          {!location2 ? <Warning>please enter a location</Warning> : ''}
+        </Label>
+        <Button type="submit">find middle</Button>
+      </Form>
+    </Container>
   )
 }
 
@@ -57,18 +55,15 @@ const Container = styled.div`
 
 const Form = styled.form`
   display: grid;
-
   gap: 20px;
 `
 const Label = styled.label`
   display: grid;
   gap: 5px;
 `
-
 const Input = styled.input`
   max-width: 40em;
 `
-
 const Button = styled.button`
   padding: 10px 20px;
   max-width: 170px;
