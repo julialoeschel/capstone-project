@@ -7,9 +7,14 @@ export default function LocationInput(): JSX.Element {
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    setLocation1('')
-    setLocation2('')
-    console.log(location1, location2)
+
+    if (!location1 || !location2) {
+      console.log('Warning')
+    } else {
+      setLocation1('')
+      setLocation2('')
+      console.log(location1, location2)
+    }
   }
 
   return (
@@ -24,6 +29,7 @@ export default function LocationInput(): JSX.Element {
               value={location1}
               onChange={(event) => setLocation1(event.target.value)}
             />
+            {!location1 ? <Warning>please enter a location</Warning> : ''}
           </Label>
 
           <Label>
@@ -34,6 +40,7 @@ export default function LocationInput(): JSX.Element {
               value={location2}
               onChange={(event) => setLocation2(event.target.value)}
             />
+            {!location2 ? <Warning>please enter a location</Warning> : ''}
           </Label>
           <Button type="submit">find middle</Button>
         </Form>
@@ -66,4 +73,7 @@ const Button = styled.button`
   padding: 10px 20px;
   max-width: 170px;
   justify-self: center;
+`
+const Warning = styled.span`
+  color: #d86d6d;
 `
