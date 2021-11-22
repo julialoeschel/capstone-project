@@ -1,9 +1,10 @@
 import React from 'react'
+import LocationInput from './components/LocationInput/LocationInput'
 
-import { BrowserRouter } from 'react-router-dom'
+//import { BrowserRouter } from 'react-router-dom'
 
 function App(): JSX.Element {
-  return <BrowserRouter>Test test</BrowserRouter>
+  return <LocationInput></LocationInput>
 }
 
 export default App
