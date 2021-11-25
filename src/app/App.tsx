@@ -1,10 +1,14 @@
 import React from 'react'
 import LocationInput from './components/LocationInput/LocationInput'
-
-//import { BrowserRouter } from 'react-router-dom'
+import Map from './components/Map/Map'
 
 function App(): JSX.Element {
-  return <LocationInput />
+  return (
+    <>
+      <LocationInput />
+      <Map />
+    </>
+  )
 }
 
 export default App
