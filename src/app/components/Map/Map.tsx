@@ -1,7 +1,7 @@
 import 'mapbox-gl/dist/mapbox-gl.css'
 import React, { useEffect, useRef, useState } from 'react'
 import type { Map } from 'mapbox-gl'
-import mapboxgl from 'mapbox-gl' // or "const mapboxgl = require('mapbox-gl');"
+import mapboxgl from 'mapbox-gl'
 import styled from 'styled-components'
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
@@ -30,10 +30,9 @@ export default function MapBox(): JSX.Element {
 
     const geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
-      //marker: new mapboxgl.Marker({ color: 'orange' }),
+
       mapboxgl: map.current,
     })
-
     map.current.addControl(geocoder)
   }, [])
   useEffect(() => {
