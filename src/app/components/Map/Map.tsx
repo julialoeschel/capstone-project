@@ -6,9 +6,6 @@ import styled from 'styled-components'
 
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-// const MapboxDirections = require('@mapbox/mapbox-gl-directions')
-
 if (typeof import.meta.env.VITE_MAPBOX_ACCESSKEY === 'string') {
   mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESSKEY
 } else {
@@ -36,6 +33,7 @@ export default function MapBox(): JSX.Element {
     })
     map.current.addControl(mapDirections, 'top-left')
   }, [])
+
   useEffect(() => {
     map.current?.on('move', () => {
       if (map.current) {
