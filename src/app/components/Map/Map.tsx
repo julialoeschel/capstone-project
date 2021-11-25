@@ -20,6 +20,7 @@ export default function MapBox(): JSX.Element {
   const [lng, setLng] = useState<number>(9.96)
   const [lat, setLat] = useState<number>(53.55)
   const [zoom, setZoom] = useState<number>(8)
+  const [distance, setDistance] = useState<number>(0)
 
   useEffect(() => {
     if (map && map.current) return // initialize map only once
@@ -30,9 +31,23 @@ export default function MapBox(): JSX.Element {
       zoom: zoom,
     })
 
+    async function getRoute(start: number[], end: number[]) {
+      const query = await fetch(
+        `https://api.mapbox.com/directions/v5/mapbox/driving/${start[0]},${start[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`,
+        { method: 'GET' }
+      )
+      const json = await query.json()
+      const data = json.routes[0]
+      console.log(data)
+      console.log(data.distance)
+      setDistance(data.distance)
+    }
+    getRoute([9.993682, 53.551086], [8.801694, 53.079296])
+
     const mapDirections = new MapboxDirections({
       accessToken: mapboxgl.accessToken,
     })
+
     map.current.addControl(mapDirections, 'top-left')
   }, [])
 
@@ -49,6 +64,7 @@ export default function MapBox(): JSX.Element {
 
   return (
     <div>
+      <span>Distance: {distance} m </span>
       <MapContainer ref={mapContainer} className="map-container" />
       <SidebarContainer className="sidebar">
         Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
