@@ -3,7 +3,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import type { Map } from 'mapbox-gl'
 import mapboxgl from 'mapbox-gl'
 import styled from 'styled-components'
-import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
+import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions'
+import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'
+
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
 
 if (typeof import.meta.env.VITE_MAPBOX_ACCESSKEY === 'string') {
@@ -28,13 +30,12 @@ export default function MapBox(): JSX.Element {
       zoom: zoom,
     })
 
-    const geocoder = new MapboxGeocoder({
+    const mapDirections = new MapboxDirections({
       accessToken: mapboxgl.accessToken,
-
-      mapboxgl: map.current,
     })
-    map.current.addControl(geocoder)
+    map.current.addControl(mapDirections, 'top-left')
   }, [])
+
   useEffect(() => {
     map.current?.on('move', () => {
       if (map.current) {
@@ -48,23 +49,25 @@ export default function MapBox(): JSX.Element {
 
   return (
     <div>
+      <MapContainer ref={mapContainer} className="map-container" />
       <SidebarContainer className="sidebar">
         Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
       </SidebarContainer>
-      <MapContainer ref={mapContainer} className="map-container" />
     </div>
   )
 }
 
 const MapContainer = styled.div`
-  height: 200px;
-  width: 100%;
+  height: 100vh;
+  width: 90vw;
   position: relative;
+  margin: auto;
 `
 const SidebarContainer = styled.div`
+  display: inline-block;
   background-color: rgba(35, 55, 75, 0.9);
+  padding: 0 5px;
   color: #fff;
-  padding: 6px 12px;
   font-family: monospace;
   z-index: 1;
   top: 0;
