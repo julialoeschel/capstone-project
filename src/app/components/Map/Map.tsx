@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import type { Map } from 'mapbox-gl'
 import mapboxgl from 'mapbox-gl'
 import styled from 'styled-components'
+import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions'
+import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'
 
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
 
