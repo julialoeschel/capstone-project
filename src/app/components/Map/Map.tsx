@@ -47,8 +47,9 @@ export default function MapBox(): JSX.Element {
     const mapDirections = new MapboxDirections({
       accessToken: mapboxgl.accessToken,
     })
-
     map.current.addControl(mapDirections, 'top-left')
+    const mapControl = new mapboxgl.NavigationControl()
+    map.current.addControl(mapControl)
   }, [])
 
   useEffect(() => {
