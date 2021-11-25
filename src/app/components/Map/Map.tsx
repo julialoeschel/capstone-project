@@ -6,8 +6,10 @@ import styled from 'styled-components'
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
 
-if (process.env.MAPBOX_ACCESKEY) {
-  mapboxgl.accessToken = process.env.MAPBOX_ACCESKEY
+if (typeof import.meta.env.VITE_MAPBOX_ACCESSKEY === 'string') {
+  mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESSKEY
+} else {
+  throw new Error('no KEY provided')
 }
 
 export default function MapBox(): JSX.Element {
@@ -16,8 +18,6 @@ export default function MapBox(): JSX.Element {
   const [lng, setLng] = useState<number>(9.96)
   const [lat, setLat] = useState<number>(53.55)
   const [zoom, setZoom] = useState<number>(8)
-
-  const testMarker = new mapboxgl.Marker({ color: 'hotpink' })
 
   useEffect(() => {
     if (map && map.current) return // initialize map only once
@@ -30,7 +30,7 @@ export default function MapBox(): JSX.Element {
 
     const geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
-      marker: testMarker,
+      //marker: new mapboxgl.Marker({ color: 'orange' }),
       mapboxgl: map.current,
     })
 
