@@ -17,7 +17,7 @@ export default function MapBox(): JSX.Element {
   const mapContainer = useRef<HTMLDivElement | null>(null)
   const map = useRef<null | Map>(null)
   const [distance, setDistance] = useState<number>(0)
-  const [location, setLocation] = useState([])
+  const [location, setLocation] = useState<number[]>([])
 
   // initialize map only once
   useEffect(() => {
@@ -37,9 +37,10 @@ export default function MapBox(): JSX.Element {
       accessToken: mapboxgl.accessToken,
     })
     geocoder.addTo('#locationInput')
+
     geocoder.on('result', function (results) {
-      setLocation(results.result.center)
-      console.log('newest location = ', results.result.center)
+      const location = results.result.center
+      setLocation(location)
     })
   }, [])
 
@@ -51,7 +52,7 @@ export default function MapBox(): JSX.Element {
     )
     const json = await query.json()
     const data = json.routes[0]
-    console.log(data.distance)
+
     setDistance(data.distance)
     const route = data.geometry.coordinates
     const geojson = {
@@ -162,6 +163,7 @@ export default function MapBox(): JSX.Element {
   return (
     <Container>
       <span>Distance: {distance} m</span>
+      <span>Location: {location} </span>
       <LocationInput id="locationInput" />
       <MapContainer ref={mapContainer} className="map-container" />
     </Container>
