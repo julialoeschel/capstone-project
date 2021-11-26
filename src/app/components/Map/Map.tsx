@@ -18,7 +18,6 @@ export default function MapBox(): JSX.Element {
   const map = useRef<null | Map>(null)
   const [distance, setDistance] = useState<number>(0)
   const [location, setLocation] = useState([])
-  //const [geocoder, setGeocoder] = useState<MapboxGeocoder>()
 
   // initialize map only once
   useEffect(() => {
@@ -27,7 +26,7 @@ export default function MapBox(): JSX.Element {
       container: mapContainer.current as HTMLElement,
       style: 'mapbox://styles/mapbox/outdoors-v11',
       center: [10, 53.55],
-      zoom: 8,
+      zoom: 7,
     })
     //add MapControl
     const mapControl = new mapboxgl.NavigationControl()
@@ -54,23 +53,116 @@ export default function MapBox(): JSX.Element {
     const data = json.routes[0]
     console.log(data.distance)
     setDistance(data.distance)
+    const route = data.geometry.coordinates
+    const geojson = {
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: 'LineString',
+        coordinates: route,
+      },
+    }
+
+    const pointData = {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'Point',
+            coordinates: location,
+          },
+        },
+      ],
+    }
+
+    if (map.current?.getSource('route')) {
+      map.current.getSource('route').setData(geojson)
+    } else {
+      map.current?.addLayer({
+        id: 'route',
+        type: 'line',
+        source: {
+          type: 'geojson',
+          data: geojson,
+        },
+        layout: {
+          'line-join': 'round',
+          'line-cap': 'round',
+        },
+        paint: {
+          'line-color': '#2d8f43',
+          'line-width': 5,
+          'line-opacity': 0.75,
+        },
+      })
+    }
+    if (map.current?.getSource('point')) {
+      map.current.getSource('point').setData(pointData)
+    } else {
+      map.current?.addLayer({
+        id: 'point',
+        type: 'circle',
+        source: {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: [
+              {
+                type: 'Feature',
+                properties: {},
+                geometry: {
+                  type: 'Point',
+                  coordinates: location,
+                },
+              },
+            ],
+          },
+        },
+        paint: {
+          'circle-radius': 10,
+          'circle-color': '#3887be',
+        },
+      })
+    }
+
+    if (map.current?.getLayer('end')) {
+      map.current.getSource('end').setData(end)
+    } else {
+      map.current?.addLayer({
+        id: 'end',
+        type: 'circle',
+        source: {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: [
+              {
+                type: 'Feature',
+                properties: {},
+                geometry: {
+                  type: 'Point',
+                  coordinates: [8.80889, 53.07694],
+                },
+              },
+            ],
+          },
+        },
+        paint: {
+          'circle-radius': 10,
+          'circle-color': '#f30',
+        },
+      })
+    }
   }
 
-  function handleclick() {
-    getRoute(location, [7.43861, 46.95083])
-  }
+  getRoute(location, [8.80889, 53.07694])
 
   return (
     <Container>
-      <span>Distance: {distance} m </span>
+      <span>Distance: {distance} m</span>
       <LocationInput id="locationInput" />
-      <Button
-        onClick={() => {
-          handleclick()
-        }}
-      >
-        Get Distance to Bremen
-      </Button>
       <MapContainer ref={mapContainer} className="map-container" />
     </Container>
   )
@@ -93,7 +185,4 @@ const LocationInput = styled.div`
   background-color: #e6e4e4;
   padding: 20px;
   height: 80px;
-`
-const Button = styled.button`
-  padding: 10px;
 `
