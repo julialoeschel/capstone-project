@@ -18,6 +18,9 @@ export default function MapBox(): JSX.Element {
   const map = useRef<null | Map>(null)
   const [distance, setDistance] = useState<number>(0)
   const [location, setLocation] = useState<number[]>([])
+  const [locationName, setLocationName] = useState<string>('')
+  const [location1, setLocation1] = useState<number[]>([])
+  const [location2, setLocation2] = useState<number[]>([])
 
   // initialize map only once
   useEffect(() => {
@@ -41,10 +44,11 @@ export default function MapBox(): JSX.Element {
     geocoder.on('result', function (results) {
       const location = results.result.center
       setLocation(location)
+      setLocationName(results.result.text)
     })
   }, [])
 
-  // get Distance from API to [7.43861, 46.95083] (its Bremen)
+  // get Distance from API to [7.43861, 46.95083] (its Bremen) and draw route
   async function getRoute(start: number[], end: number[]) {
     const query = await fetch(
       `https://api.mapbox.com/directions/v5/mapbox/driving/${start[0]},${start[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`,
@@ -52,9 +56,9 @@ export default function MapBox(): JSX.Element {
     )
     const json = await query.json()
     const data = json.routes[0]
-
     setDistance(data.distance)
     const route = data.geometry.coordinates
+
     const geojson = {
       type: 'Feature',
       properties: {},
@@ -72,7 +76,30 @@ export default function MapBox(): JSX.Element {
           properties: {},
           geometry: {
             type: 'Point',
-            coordinates: location,
+            coordinates: location1,
+          },
+        },
+      ],
+    }
+    map.current
+      ? map.current.fitBounds(
+          [
+            location1, // southwestern corner of the bounds
+            location2, // northeastern corner of the bounds
+          ],
+          { padding: { top: 100, bottom: 100, left: 100, right: 100 } }
+        )
+      : null
+
+    const endData = {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'Point',
+            coordinates: location2,
           },
         },
       ],
@@ -115,7 +142,7 @@ export default function MapBox(): JSX.Element {
                 properties: {},
                 geometry: {
                   type: 'Point',
-                  coordinates: location,
+                  coordinates: location1,
                 },
               },
             ],
@@ -129,7 +156,7 @@ export default function MapBox(): JSX.Element {
     }
 
     if (map.current?.getLayer('end')) {
-      map.current.getSource('end').setData(end)
+      map.current.getSource('end').setData(endData)
     } else {
       map.current?.addLayer({
         id: 'end',
@@ -144,7 +171,7 @@ export default function MapBox(): JSX.Element {
                 properties: {},
                 geometry: {
                   type: 'Point',
-                  coordinates: [8.80889, 53.07694],
+                  coordinates: location2,
                 },
               },
             ],
@@ -158,13 +185,36 @@ export default function MapBox(): JSX.Element {
     }
   }
 
-  getRoute(location, [8.80889, 53.07694])
+  getRoute(location1, location2)
 
   return (
     <Container>
       <span>Distance: {distance} m</span>
-      <span>Location: {location} </span>
-      <LocationInput id="locationInput" />
+      <p>
+        HowTo: set a location by clicking the button once you searched a
+        location in the input field
+      </p>
+
+      <LocationInput id="locationInput">
+        <ButtonContainer>
+          <button
+            onClick={() => {
+              setLocation1(location)
+            }}
+          >
+            Location 1: {location1}
+          </button>
+          <button
+            onClick={() => {
+              setLocation2(location)
+            }}
+          >
+            Location 2: {location2}
+          </button>
+          <span>location set to: {locationName}</span>
+        </ButtonContainer>
+      </LocationInput>
+
       <MapContainer ref={mapContainer} className="map-container" />
     </Container>
   )
@@ -185,6 +235,13 @@ const MapContainer = styled.div`
 
 const LocationInput = styled.div`
   background-color: #e6e4e4;
-  padding: 20px;
-  height: 80px;
+  padding: 10px;
+  height: 100px;
+  display: grid;
+  gap: 5px;
+  grid-template-columns: 200px 1fr;
+`
+const ButtonContainer = styled.div`
+  display: grid;
+  gap: 5px;
 `
