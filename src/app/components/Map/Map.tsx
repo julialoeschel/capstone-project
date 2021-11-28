@@ -210,8 +210,8 @@ export default function MapBox(): JSX.Element {
           </button>
           <button
             onClick={() => {
-              setLocation1([])
-              setLocation2([])
+              setLocationName1('')
+              setLocationName2('')
             }}
           >
             clear
