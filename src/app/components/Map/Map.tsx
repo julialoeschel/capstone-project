@@ -19,6 +19,8 @@ export default function MapBox(): JSX.Element {
   const [distance, setDistance] = useState<number>(0)
   const [location, setLocation] = useState<number[]>([])
   const [locationName, setLocationName] = useState<string>('')
+  const [locationName1, setLocationName1] = useState<string>('')
+  const [locationName2, setLocationName2] = useState<string>('')
   const [location1, setLocation1] = useState<number[]>([])
   const [location2, setLocation2] = useState<number[]>([])
 
@@ -43,8 +45,9 @@ export default function MapBox(): JSX.Element {
 
     geocoder.on('result', function (results) {
       const location = results.result.center
+      const locationName = results.result.text
       setLocation(location)
-      setLocationName(results.result.text)
+      setLocationName(locationName)
     })
   }, [])
 
@@ -82,13 +85,9 @@ export default function MapBox(): JSX.Element {
       ],
     }
     map.current
-      ? map.current.fitBounds(
-          [
-            location1, // southwestern corner of the bounds
-            location2, // northeastern corner of the bounds
-          ],
-          { padding: { top: 100, bottom: 100, left: 100, right: 100 } }
-        )
+      ? map.current.fitBounds([location1, location2], {
+          padding: { top: 100, bottom: 100, left: 100, right: 100 },
+        })
       : null
 
     const endData = {
@@ -190,31 +189,38 @@ export default function MapBox(): JSX.Element {
   return (
     <Container>
       <span>Distance: {distance} m</span>
-      <p>
-        HowTo: set a location by clicking the button once you searched a
-        location in the input field
-      </p>
-
       <LocationInput id="locationInput">
         <ButtonContainer>
           <button
             onClick={() => {
-              setLocation1(location)
+              console.log(location1)
+              if (location1.length < 1) {
+                setLocation1(location)
+                setLocationName1(locationName)
+              } else if (location2.length < 1) {
+                setLocation2(location)
+                setLocationName2(locationName)
+              } else {
+                alert('both locations are set')
+              }
             }}
           >
-            Location 1: {location1}
+            set location
           </button>
           <button
             onClick={() => {
-              setLocation2(location)
+              setLocation1([])
+              setLocation2([])
             }}
           >
-            Location 2: {location2}
+            clear
           </button>
-          <span>location set to: {locationName}</span>
-        </ButtonContainer>
-      </LocationInput>
-
+        </ButtonContainer>{' '}
+      </LocationInput>{' '}
+      <span>
+        location set to: Location1: {locationName1} and location 2:{' '}
+        {locationName2}
+      </span>
       <MapContainer ref={mapContainer} className="map-container" />
     </Container>
   )
