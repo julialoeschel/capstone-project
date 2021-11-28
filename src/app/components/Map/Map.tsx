@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
 import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
+import YourLocationInput from '../YourLocationInput/YourLocationInput'
 
 if (typeof import.meta.env.VITE_MAPBOX_ACCESSKEY === 'string') {
   mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESSKEY
@@ -215,12 +216,12 @@ export default function MapBox(): JSX.Element {
           >
             clear
           </button>
-        </ButtonContainer>{' '}
-      </LocationInput>{' '}
-      <span>
-        location set to: Location1: {locationName1} and location 2:{' '}
-        {locationName2}
-      </span>
+        </ButtonContainer>
+      </LocationInput>
+      <YourLocationInput
+        locationName1={locationName1}
+        locationName2={locationName2}
+      />
       <MapContainer ref={mapContainer} className="map-container" />
     </Container>
   )
