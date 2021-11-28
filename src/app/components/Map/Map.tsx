@@ -3,9 +3,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import type { Map } from 'mapbox-gl'
 import mapboxgl from 'mapbox-gl'
 import styled from 'styled-components'
-import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions'
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
 import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'
-
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
 
 if (typeof import.meta.env.VITE_MAPBOX_ACCESSKEY === 'string') {
@@ -17,61 +16,238 @@ if (typeof import.meta.env.VITE_MAPBOX_ACCESSKEY === 'string') {
 export default function MapBox(): JSX.Element {
   const mapContainer = useRef<HTMLDivElement | null>(null)
   const map = useRef<null | Map>(null)
-  const [lng, setLng] = useState<number>(9.96)
-  const [lat, setLat] = useState<number>(53.55)
-  const [zoom, setZoom] = useState<number>(8)
+  const [distance, setDistance] = useState<number>(0)
+  const [location, setLocation] = useState<number[]>([])
+  const [locationName, setLocationName] = useState<string>('')
+  const [locationName1, setLocationName1] = useState<string>('')
+  const [locationName2, setLocationName2] = useState<string>('')
+  const [location1, setLocation1] = useState<number[]>([])
+  const [location2, setLocation2] = useState<number[]>([])
 
+  // initialize map only once
   useEffect(() => {
-    if (map && map.current) return // initialize map only once
+    if (map && map.current) return
     map.current = new mapboxgl.Map({
       container: mapContainer.current as HTMLElement,
-      style: 'mapbox://styles/mapbox/streets-v11',
-      center: [lng, lat],
-      zoom: zoom,
+      style: 'mapbox://styles/mapbox/outdoors-v11',
+      center: [10, 53.55],
+      zoom: 7,
     })
+    //add MapControl
+    const mapControl = new mapboxgl.NavigationControl()
+    map.current.addControl(mapControl)
 
-    const mapDirections = new MapboxDirections({
+    //initiallize Geocoder and set to Div
+    const geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
     })
-    map.current.addControl(mapDirections, 'top-left')
+    geocoder.addTo('#locationInput')
+
+    geocoder.on('result', function (results) {
+      const location = results.result.center
+      const locationName = results.result.text
+      setLocation(location)
+      setLocationName(locationName)
+    })
   }, [])
 
-  useEffect(() => {
-    map.current?.on('move', () => {
-      if (map.current) {
-        setLng(map.current.getCenter().lng)
-        setLat(map.current.getCenter().lat)
-        setZoom(map.current.getZoom())
-      }
-    })
-    // wait for map to initialize
-  }, [])
+  // get Distance from API to [7.43861, 46.95083] (its Bremen) and draw route
+  async function getRoute(start: number[], end: number[]) {
+    const query = await fetch(
+      `https://api.mapbox.com/directions/v5/mapbox/driving/${start[0]},${start[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`,
+      { method: 'GET' }
+    )
+    const json = await query.json()
+    const data = json.routes[0]
+    setDistance(data.distance)
+    const route = data.geometry.coordinates
+
+    const geojson = {
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: 'LineString',
+        coordinates: route,
+      },
+    }
+
+    const pointData = {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'Point',
+            coordinates: location1,
+          },
+        },
+      ],
+    }
+    map.current
+      ? map.current.fitBounds([location1, location2], {
+          padding: { top: 100, bottom: 100, left: 100, right: 100 },
+        })
+      : null
+
+    const endData = {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'Point',
+            coordinates: location2,
+          },
+        },
+      ],
+    }
+
+    if (map.current?.getSource('route')) {
+      map.current.getSource('route').setData(geojson)
+    } else {
+      map.current?.addLayer({
+        id: 'route',
+        type: 'line',
+        source: {
+          type: 'geojson',
+          data: geojson,
+        },
+        layout: {
+          'line-join': 'round',
+          'line-cap': 'round',
+        },
+        paint: {
+          'line-color': '#2d8f43',
+          'line-width': 5,
+          'line-opacity': 0.75,
+        },
+      })
+    }
+    if (map.current?.getSource('point')) {
+      map.current.getSource('point').setData(pointData)
+    } else {
+      map.current?.addLayer({
+        id: 'point',
+        type: 'circle',
+        source: {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: [
+              {
+                type: 'Feature',
+                properties: {},
+                geometry: {
+                  type: 'Point',
+                  coordinates: location1,
+                },
+              },
+            ],
+          },
+        },
+        paint: {
+          'circle-radius': 10,
+          'circle-color': '#3887be',
+        },
+      })
+    }
+
+    if (map.current?.getLayer('end')) {
+      map.current.getSource('end').setData(endData)
+    } else {
+      map.current?.addLayer({
+        id: 'end',
+        type: 'circle',
+        source: {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: [
+              {
+                type: 'Feature',
+                properties: {},
+                geometry: {
+                  type: 'Point',
+                  coordinates: location2,
+                },
+              },
+            ],
+          },
+        },
+        paint: {
+          'circle-radius': 10,
+          'circle-color': '#f30',
+        },
+      })
+    }
+  }
+
+  getRoute(location1, location2)
 
   return (
-    <div>
+    <Container>
+      <span>Distance: {distance} m</span>
+      <LocationInput id="locationInput">
+        <ButtonContainer>
+          <button
+            onClick={() => {
+              console.log(location1)
+              if (location1.length < 1) {
+                setLocation1(location)
+                setLocationName1(locationName)
+              } else if (location2.length < 1) {
+                setLocation2(location)
+                setLocationName2(locationName)
+              } else {
+                alert('both locations are set')
+              }
+            }}
+          >
+            set location
+          </button>
+          <button
+            onClick={() => {
+              setLocation1([])
+              setLocation2([])
+            }}
+          >
+            clear
+          </button>
+        </ButtonContainer>{' '}
+      </LocationInput>{' '}
+      <span>
+        location set to: Location1: {locationName1} and location 2:{' '}
+        {locationName2}
+      </span>
       <MapContainer ref={mapContainer} className="map-container" />
-      <SidebarContainer className="sidebar">
-        Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
-      </SidebarContainer>
-    </div>
+    </Container>
   )
 }
+
+const Container = styled.div`
+  display: grid;
+  gap: 5px;
+`
 
 const MapContainer = styled.div`
   height: 100vh;
   width: 90vw;
   position: relative;
   margin: auto;
+  margin-top: 30px;
 `
-const SidebarContainer = styled.div`
-  display: inline-block;
-  background-color: rgba(35, 55, 75, 0.9);
-  padding: 0 5px;
-  color: #fff;
-  font-family: monospace;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  margin: 12px;
-  border-radius: 4px;
+
+const LocationInput = styled.div`
+  background-color: #e6e4e4;
+  padding: 10px;
+  height: 100px;
+  display: grid;
+  gap: 5px;
+  grid-template-columns: 200px 1fr;
+`
+const ButtonContainer = styled.div`
+  display: grid;
+  gap: 5px;
 `
