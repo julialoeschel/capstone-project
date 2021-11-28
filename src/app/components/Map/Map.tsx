@@ -207,19 +207,16 @@ export default function MapBox(): JSX.Element {
   return (
     <>
       <InputContainer>
-        <h1>Meet U There</h1>
+        <h1>See U There</h1>
         <span></span>
-        <LocationInput id="locationInput"></LocationInput>{' '}
-        <ButtonContainer>
-          <InputPageButton onClick={() => onSet()}>
-            set location
-          </InputPageButton>
-          <InputPageButton onClick={() => onClear()}>clear</InputPageButton>
-        </ButtonContainer>
-        <span>
-          location set to: Location1: {locationName1} and location 2:{' '}
-          {locationName2}
-        </span>
+        <InputPageButton onClick={() => onSet()}>set location</InputPageButton>
+        <LocationInput id="locationInput"></LocationInput>
+        <span>Your locations are set to:</span>
+        Location1: {locationName1} and location 2:
+        {locationName2}
+        <InputPageButton onClick={() => onClear()}>
+          clear all locations
+        </InputPageButton>
       </InputContainer>
       <span>Distance: {distance} m</span>
       <MapContainer ref={mapContainer} className="map-container" />
@@ -246,8 +243,4 @@ const LocationInput = styled.span`
   background-color: #e6e4e4;
   padding: 10px;
   border-radius: 0.4em;
-`
-const ButtonContainer = styled.div`
-  display: grid;
-  gap: 5px;
 `
