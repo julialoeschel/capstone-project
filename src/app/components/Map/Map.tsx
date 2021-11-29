@@ -6,7 +6,9 @@ import styled from 'styled-components'
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
 import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
+import YourLocationInput from '../YourLocationInput/YourLocationInput'
 import InputPageButton from '../InputPageButton/InputPageButton'
+
 
 if (typeof import.meta.env.VITE_MAPBOX_ACCESSKEY === 'string') {
   mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESSKEY
@@ -198,27 +200,30 @@ export default function MapBox(): JSX.Element {
   }
 
   function onClear() {
-    setLocation1([])
-    setLocation2([])
+  setLocationName1('')
+              setLocationName2('')
   }
 
   getRoute(location1, location2)
 
   return (
+
     <>
       <InputContainer>
         <h1>See U There</h1>
-        <span></span>
+
         <InputPageButton onClick={() => onSet()}>set location</InputPageButton>
         <LocationInput id="locationInput"></LocationInput>
-        <span>Your locations are set to:</span>
-        Location1: {locationName1} and location 2:
-        {locationName2}
+        <YourLocationInput
+        locationName1={locationName1}
+        locationName2={locationName2}
+      />
         <InputPageButton onClick={() => onClear()}>
           clear all locations
         </InputPageButton>
       </InputContainer>
       <span>Distance: {distance} m</span>
+
       <MapContainer ref={mapContainer} className="map-container" />
     </>
   )
