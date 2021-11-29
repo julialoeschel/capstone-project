@@ -7,6 +7,8 @@ import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
 import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
 import YourLocationInput from '../YourLocationInput/YourLocationInput'
+import InputPageButton from '../InputPageButton/InputPageButton'
+
 
 if (typeof import.meta.env.VITE_MAPBOX_ACCESSKEY === 'string') {
   mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESSKEY
@@ -185,51 +187,53 @@ export default function MapBox(): JSX.Element {
     }
   }
 
+  function onSet() {
+    if (location1.length < 1) {
+      setLocation1(location)
+      setLocationName1(locationName)
+    } else if (location2.length < 1) {
+      setLocation2(location)
+      setLocationName2(locationName)
+    } else {
+      alert('both locations are set')
+    }
+  }
+
+  function onClear() {
+  setLocationName1('')
+              setLocationName2('')
+  }
+
   getRoute(location1, location2)
 
   return (
-    <Container>
-      <span>Distance: {distance} m</span>
-      <LocationInput id="locationInput">
-        <ButtonContainer>
-          <button
-            onClick={() => {
-              console.log(location1)
-              if (location1.length < 1) {
-                setLocation1(location)
-                setLocationName1(locationName)
-              } else if (location2.length < 1) {
-                setLocation2(location)
-                setLocationName2(locationName)
-              } else {
-                alert('both locations are set')
-              }
-            }}
-          >
-            set location
-          </button>
-          <button
-            onClick={() => {
-              setLocationName1('')
-              setLocationName2('')
-            }}
-          >
-            clear
-          </button>
-        </ButtonContainer>
-      </LocationInput>
-      <YourLocationInput
+
+    <>
+      <InputContainer>
+        <h1>See U There</h1>
+
+        <InputPageButton onClick={() => onSet()}>set location</InputPageButton>
+        <LocationInput id="locationInput"></LocationInput>
+        <YourLocationInput
         locationName1={locationName1}
         locationName2={locationName2}
       />
+        <InputPageButton onClick={() => onClear()}>
+          clear all locations
+        </InputPageButton>
+      </InputContainer>
+      <span>Distance: {distance} m</span>
+
       <MapContainer ref={mapContainer} className="map-container" />
-    </Container>
+    </>
   )
 }
 
-const Container = styled.div`
+const InputContainer = styled.div`
   display: grid;
-  gap: 5px;
+  gap: 10px;
+  padding: 20px;
+  height: 100%vh;
 `
 
 const MapContainer = styled.div`
@@ -240,15 +244,8 @@ const MapContainer = styled.div`
   margin-top: 30px;
 `
 
-const LocationInput = styled.div`
+const LocationInput = styled.span`
   background-color: #e6e4e4;
   padding: 10px;
-  height: 100px;
-  display: grid;
-  gap: 5px;
-  grid-template-columns: 200px 1fr;
-`
-const ButtonContainer = styled.div`
-  display: grid;
-  gap: 5px;
+  border-radius: 0.4em;
 `
