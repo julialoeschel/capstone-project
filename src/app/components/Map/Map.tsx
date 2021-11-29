@@ -8,7 +8,9 @@ import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
 import YourLocationInput from '../YourLocationInput/YourLocationInput'
 import InputPageButton from '../InputPageButton/InputPageButton'
-
+import NavigationButton from '../NavigationButton/NavigationButton'
+import NavigationButtonMapIcon from '../../Icons/NavigationButtonMapIcon'
+import NavigationButtonBackIcon from '../../Icons/NavigationButtonBackIcon'
 
 if (typeof import.meta.env.VITE_MAPBOX_ACCESSKEY === 'string') {
   mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESSKEY
@@ -26,6 +28,7 @@ export default function MapBox(): JSX.Element {
   const [locationName2, setLocationName2] = useState<string>('')
   const [location1, setLocation1] = useState<number[]>([])
   const [location2, setLocation2] = useState<number[]>([])
+  const [showMapPage, setShowMapPage] = useState<boolean>(false)
 
   // initialize map only once
   useEffect(() => {
@@ -200,14 +203,17 @@ export default function MapBox(): JSX.Element {
   }
 
   function onClear() {
-  setLocationName1('')
-              setLocationName2('')
+    setLocationName1('')
+    setLocationName2('')
+  }
+  function showMap() {
+    setShowMapPage(!showMapPage)
+    console.log(showMapPage)
   }
 
   getRoute(location1, location2)
 
   return (
-
     <>
       <InputContainer>
         <h1>See U There</h1>
@@ -215,16 +221,22 @@ export default function MapBox(): JSX.Element {
         <InputPageButton onClick={() => onSet()}>set location</InputPageButton>
         <LocationInput id="locationInput"></LocationInput>
         <YourLocationInput
-        locationName1={locationName1}
-        locationName2={locationName2}
-      />
+          locationName1={locationName1}
+          locationName2={locationName2}
+        />
         <InputPageButton onClick={() => onClear()}>
           clear all locations
         </InputPageButton>
+        <NavigationButton onClick={() => showMap()}>
+          <NavigationButtonMapIcon />
+        </NavigationButton>
       </InputContainer>
-      <span>Distance: {distance} m</span>
 
+      <span>Distance: {distance} m</span>
       <MapContainer ref={mapContainer} className="map-container" />
+      <NavigationButton onClick={() => showMap()}>
+        <NavigationButtonBackIcon />
+      </NavigationButton>
     </>
   )
 }
