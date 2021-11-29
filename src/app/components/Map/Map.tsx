@@ -9,8 +9,8 @@ import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
 import YourLocationInput from '../YourLocationInput/YourLocationInput'
 import InputPageButton from '../InputPageButton/InputPageButton'
 import NavigationButton from '../NavigationButton/NavigationButton'
-import NavigationButtonMapIncon from '../../Incons/NavigationButtonMapIcon'
-import NavigationButtonBackIncon from '../../Incons/NavigationButtonBackIcon'
+import NavigationButtonMapIcon from '../../Icons/NavigationButtonMapIcon'
+import NavigationButtonBackIcon from '../../Icons/NavigationButtonBackIcon'
 
 if (typeof import.meta.env.VITE_MAPBOX_ACCESSKEY === 'string') {
   mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESSKEY
@@ -228,14 +228,14 @@ export default function MapBox(): JSX.Element {
           clear all locations
         </InputPageButton>
         <NavigationButton onClick={() => showMap()}>
-          <NavigationButtonMapIncon />
+          <NavigationButtonMapIcon />
         </NavigationButton>
       </InputContainer>
 
       <span>Distance: {distance} m</span>
       <MapContainer ref={mapContainer} className="map-container" />
       <NavigationButton onClick={() => showMap()}>
-        <NavigationButtonBackIncon />
+        <NavigationButtonBackIcon />
       </NavigationButton>
     </>
   )
