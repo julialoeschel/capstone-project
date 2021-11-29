@@ -9,7 +9,7 @@ import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
 import YourLocationInput from '../YourLocationInput/YourLocationInput'
 import InputPageButton from '../InputPageButton/InputPageButton'
 import NavigationButton from '../NavigationButton/NavigationButton'
-import NavigationButtonMapIncon from '../../Incons/NavigationButtonMapIncon'
+import NavigationButtonMapIncon from '../../Incons/NavigationButtonMapIcon'
 import NavigationButtonBackIncon from '../../Incons/NavigationButtonBackIcon'
 
 if (typeof import.meta.env.VITE_MAPBOX_ACCESSKEY === 'string') {

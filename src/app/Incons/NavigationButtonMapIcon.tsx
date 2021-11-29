@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function NavigationButtonMapIncon(): JSX.Element {
+export default function NavigationButtonMapIcon(): JSX.Element {
   return (
     <>
       <svg
