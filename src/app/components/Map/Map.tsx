@@ -28,6 +28,7 @@ export default function MapBox(): JSX.Element {
   const [locationName2, setLocationName2] = useState<string>('')
   const [location1, setLocation1] = useState<number[]>([])
   const [location2, setLocation2] = useState<number[]>([])
+  const [showMapPage, setShowMapPage] = useState<boolean>(false)
 
   // initialize map only once
   useEffect(() => {
@@ -205,6 +206,10 @@ export default function MapBox(): JSX.Element {
     setLocationName1('')
     setLocationName2('')
   }
+  function showMap() {
+    setShowMapPage(!showMapPage)
+    console.log(showMapPage)
+  }
 
   getRoute(location1, location2)
 
@@ -222,14 +227,14 @@ export default function MapBox(): JSX.Element {
         <InputPageButton onClick={() => onClear()}>
           clear all locations
         </InputPageButton>
-        <NavigationButton>
+        <NavigationButton onClick={() => showMap()}>
           <NavigationButtonMapIncon />
         </NavigationButton>
       </InputContainer>
-      <span>Distance: {distance} m</span>
 
+      <span>Distance: {distance} m</span>
       <MapContainer ref={mapContainer} className="map-container" />
-      <NavigationButton>
+      <NavigationButton onClick={() => showMap()}>
         <NavigationButtonBackIncon />
       </NavigationButton>
     </>
