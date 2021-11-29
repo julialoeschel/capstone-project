@@ -4,11 +4,17 @@ import styled from 'styled-components'
 
 type NavigationButtonProps = {
   children: ReactNode
+  onClick: () => void
 }
 export default function NavigationButton({
   children,
+  onClick,
 }: NavigationButtonProps): JSX.Element {
-  return <NavigationButtonContainer>{children}</NavigationButtonContainer>
+  return (
+    <NavigationButtonContainer onClick={onClick}>
+      {children}
+    </NavigationButtonContainer>
+  )
 }
 const NavigationButtonContainer = styled.div`
   height: 70px;
