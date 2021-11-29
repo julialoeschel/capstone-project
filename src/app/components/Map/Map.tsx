@@ -207,39 +207,56 @@ export default function MapBox(): JSX.Element {
     setLocationName2('')
   }
   function showMap() {
-    setShowMapPage(!showMapPage)
-    console.log(showMapPage)
+    if (!showMapPage && locationName1 && locationName2) {
+      setShowMapPage(!showMapPage)
+    } else if (showMapPage) {
+      setShowMapPage(!showMapPage)
+    } else {
+      alert('please set both inputs')
+    }
   }
 
   getRoute(location1, location2)
 
   return (
     <>
-      <InputContainer>
-        <h1>See U There</h1>
+      <InputPage hidden={showMapPage}>
+        <InputContainer>
+          <h1>See U There</h1>
 
-        <InputPageButton onClick={() => onSet()}>set location</InputPageButton>
-        <LocationInput id="locationInput"></LocationInput>
-        <YourLocationInput
-          locationName1={locationName1}
-          locationName2={locationName2}
-        />
-        <InputPageButton onClick={() => onClear()}>
-          clear all locations
-        </InputPageButton>
+          <InputPageButton onClick={() => onSet()}>
+            set location
+          </InputPageButton>
+          <LocationInput id="locationInput"></LocationInput>
+          <YourLocationInput
+            locationName1={locationName1}
+            locationName2={locationName2}
+          />
+          <InputPageButton onClick={() => onClear()}>
+            clear all locations
+          </InputPageButton>
+          <NavigationButton onClick={() => showMap()}>
+            <NavigationButtonMapIcon />
+          </NavigationButton>
+        </InputContainer>
+      </InputPage>
+      <MapPage hidden={showMapPage}>
+        <span>Distance: {distance} m</span>
+        <MapContainer ref={mapContainer} className="map-container" />
         <NavigationButton onClick={() => showMap()}>
-          <NavigationButtonMapIcon />
+          <NavigationButtonBackIcon />
         </NavigationButton>
-      </InputContainer>
-
-      <span>Distance: {distance} m</span>
-      <MapContainer ref={mapContainer} className="map-container" />
-      <NavigationButton onClick={() => showMap()}>
-        <NavigationButtonBackIcon />
-      </NavigationButton>
+      </MapPage>
     </>
   )
 }
+
+const InputPage = styled.div`
+  display: ${(props) => (props.hidden ? 'none' : 'block')};
+`
+const MapPage = styled.div`
+  display: ${(props) => (props.hidden ? 'block' : 'none')};
+`
 
 const InputContainer = styled.div`
   display: grid;
@@ -249,7 +266,7 @@ const InputContainer = styled.div`
 `
 
 const MapContainer = styled.div`
-  height: 100vh;
+  height: 30vh;
   width: 90vw;
   position: relative;
   margin: auto;
