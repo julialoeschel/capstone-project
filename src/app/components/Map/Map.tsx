@@ -228,12 +228,18 @@ export default function MapBox(): JSX.Element {
   function onClear() {
     setLocation1(null)
     setLocation2(null)
+    setLocationName1('')
+    setLocationName2('')
   }
   function showMap() {
     if (!showMapPage && locationName1 && locationName2) {
       setShowMapPage(!showMapPage)
     } else if (showMapPage) {
       setShowMapPage(!showMapPage)
+      setLocation1(null)
+      setLocation2(null)
+      setLocationName1('')
+      setLocationName2('')
     } else {
       alert('please set both inputs')
     }
