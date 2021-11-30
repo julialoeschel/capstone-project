@@ -39,6 +39,13 @@ export default function MapBox(): JSX.Element {
       center: [10, 53.55],
       zoom: 7,
     })
+
+    if (map.current) {
+      map.current.on('load', function () {
+        map.current?.resize()
+      })
+    }
+
     //add MapControl
     const mapControl = new mapboxgl.NavigationControl()
     map.current.addControl(mapControl)
@@ -272,6 +279,9 @@ const InputPage = styled.div`
 `
 const MapPage = styled.div`
   display: ${(props) => (props.hidden ? 'block' : 'none')};
+  height: 100vh;
+
+  position: relative;
 `
 
 const InputContainer = styled.div`
@@ -282,8 +292,8 @@ const InputContainer = styled.div`
 `
 
 const MapContainer = styled.div`
-  height: 30vh;
-  width: 90vw;
+  height: 80vh;
+
   position: relative;
   margin: auto;
   margin-top: 30px;
