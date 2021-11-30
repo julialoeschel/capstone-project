@@ -226,8 +226,8 @@ export default function MapBox(): JSX.Element {
   }
 
   function onClear() {
-    setLocationName1('')
-    setLocationName2('')
+    setLocation1(null)
+    setLocation2(null)
   }
   function showMap() {
     if (!showMapPage && locationName1 && locationName2) {
@@ -240,6 +240,8 @@ export default function MapBox(): JSX.Element {
   }
 
   location1 && location2 ? getRoute(location1, location2) : null
+
+  console.log(location1, location2)
 
   return (
     <>
