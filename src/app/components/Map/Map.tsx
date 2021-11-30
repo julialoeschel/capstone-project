@@ -1,6 +1,6 @@
 import 'mapbox-gl/dist/mapbox-gl.css'
 import React, { useEffect, useRef, useState } from 'react'
-import type { LngLat, Map } from 'mapbox-gl'
+import type { LngLatLike, Map } from 'mapbox-gl'
 import mapboxgl from 'mapbox-gl'
 import styled from 'styled-components'
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
@@ -22,12 +22,12 @@ export default function MapBox(): JSX.Element {
   const mapContainer = useRef<HTMLDivElement | null>(null)
   const map = useRef<null | Map>(null)
   const [distance, setDistance] = useState<number>(0)
-  const [location, setLocation] = useState<LngLat | null>(null)
+  const [location, setLocation] = useState<GeoJSON.Position | null>(null)
   const [locationName, setLocationName] = useState<string>('')
   const [locationName1, setLocationName1] = useState<string>('')
   const [locationName2, setLocationName2] = useState<string>('')
-  const [location1, setLocation1] = useState<LngLat | null>(null)
-  const [location2, setLocation2] = useState<LngLat | null>(null)
+  const [location1, setLocation1] = useState<GeoJSON.Position | null>(null)
+  const [location2, setLocation2] = useState<GeoJSON.Position | null>(null)
   const [showMapPage, setShowMapPage] = useState<boolean>(false)
 
   // initialize map only once
@@ -58,14 +58,14 @@ export default function MapBox(): JSX.Element {
   }, [])
 
   // get Distance from API
-  async function getRoute(start: LngLat, end: LngLat) {
-    const startPointLng = start.toArray()[0]
-    const startPointLat = start.toArray()[1]
-    const endPointLng = end.toArray()[0]
-    const endPointLag = end.toArray()[1]
+  async function getRoute(start: GeoJSON.Position, end: GeoJSON.Position) {
+    const startPointLng = start[0]
+    const startPointLat = start[1]
+    const endPointLng = end[0]
+    const endPointLat = end[1]
 
     const query = await fetch(
-      `https://api.mapbox.com/directions/v5/mapbox/driving/${startPointLng},${startPointLat};${endPointLng},${endPointLag}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`,
+      `https://api.mapbox.com/directions/v5/mapbox/driving/${startPointLng},${startPointLat};${endPointLng},${endPointLat}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`,
       { method: 'GET' }
     )
     const json = await query.json()
@@ -73,7 +73,7 @@ export default function MapBox(): JSX.Element {
     setDistance(data.distance)
     const route = data.geometry.coordinates
 
-    const geojson = {
+    const geojson: GeoJSON.Feature<GeoJSON.Geometry> = {
       type: 'Feature',
       properties: {},
       geometry: {
@@ -82,7 +82,7 @@ export default function MapBox(): JSX.Element {
       },
     }
 
-    const pointData = {
+    const pointData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
       type: 'FeatureCollection',
       features: [
         {
@@ -90,33 +90,42 @@ export default function MapBox(): JSX.Element {
           properties: {},
           geometry: {
             type: 'Point',
-            coordinates: location1,
+            coordinates: location1 as GeoJSON.Position,
           },
         },
       ],
     }
+
+    const endData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'Point',
+            coordinates: location2 as GeoJSON.Position,
+          },
+        },
+      ],
+    }
+
     map.current && location1 && location2
-      ? map.current.fitBounds(new mapboxgl.LngLatBounds(location1, location2), {
-          padding: { top: 100, bottom: 100, left: 100, right: 100 },
-        })
+      ? map.current.fitBounds(
+          new mapboxgl.LngLatBounds(
+            location1 as LngLatLike,
+            location2 as LngLatLike
+          ),
+          {
+            padding: { top: 100, bottom: 100, left: 100, right: 100 },
+          }
+        )
       : null
 
-    const endData = {
-      type: 'FeatureCollection',
-      features: [
-        {
-          type: 'Feature',
-          properties: {},
-          geometry: {
-            type: 'Point',
-            coordinates: location2,
-          },
-        },
-      ],
-    }
+    const mapRouteSource = map.current?.getSource('route')
 
-    if (map.current?.getSource('route')) {
-      map.current.getSource('route').setData(geojson)
+    if (mapRouteSource?.type === 'geojson') {
+      mapRouteSource.setData(geojson)
     } else {
       map.current?.addLayer({
         id: 'route',
@@ -136,8 +145,9 @@ export default function MapBox(): JSX.Element {
         },
       })
     }
-    if (map.current?.getSource('point')) {
-      map.current.getSource('point').setData(pointData)
+    const mapPointSource = map.current?.getSource('point')
+    if (mapPointSource?.type === 'geojson') {
+      mapPointSource.setData(pointData)
     } else if (location1) {
       map.current?.addLayer({
         id: 'point',
@@ -164,10 +174,11 @@ export default function MapBox(): JSX.Element {
         },
       })
     }
-
-    if (map.current?.getLayer('end')) {
-      map.current.getSource('end').setData(endData)
-    } else {
+    const mapEndSource = map.current?.getSource('end')
+    if (mapEndSource?.type === 'geojson') {
+      mapEndSource.setData(endData)
+    } else if (location2) {
+      const coordinates = location2
       map.current?.addLayer({
         id: 'end',
         type: 'circle',
@@ -181,7 +192,7 @@ export default function MapBox(): JSX.Element {
                 properties: {},
                 geometry: {
                   type: 'Point',
-                  coordinates: location2,
+                  coordinates,
                 },
               },
             ],
