@@ -1,6 +1,6 @@
 import 'mapbox-gl/dist/mapbox-gl.css'
 import React, { useEffect, useRef, useState } from 'react'
-import type { Map } from 'mapbox-gl'
+import type { LngLat, Map } from 'mapbox-gl'
 import mapboxgl from 'mapbox-gl'
 import styled from 'styled-components'
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
@@ -22,12 +22,12 @@ export default function MapBox(): JSX.Element {
   const mapContainer = useRef<HTMLDivElement | null>(null)
   const map = useRef<null | Map>(null)
   const [distance, setDistance] = useState<number>(0)
-  const [location, setLocation] = useState<number[]>([])
+  const [location, setLocation] = useState<LngLat | null>(null)
   const [locationName, setLocationName] = useState<string>('')
   const [locationName1, setLocationName1] = useState<string>('')
   const [locationName2, setLocationName2] = useState<string>('')
-  const [location1, setLocation1] = useState<number[]>([])
-  const [location2, setLocation2] = useState<number[]>([])
+  const [location1, setLocation1] = useState<LngLat | null>(null)
+  const [location2, setLocation2] = useState<LngLat | null>(null)
   const [showMapPage, setShowMapPage] = useState<boolean>(false)
 
   // initialize map only once
@@ -57,10 +57,15 @@ export default function MapBox(): JSX.Element {
     })
   }, [])
 
-  // get Distance from API to [7.43861, 46.95083] (its Bremen) and draw route
-  async function getRoute(start: number[], end: number[]) {
+  // get Distance from API
+  async function getRoute(start: LngLat, end: LngLat) {
+    const startPointLng = start.toArray()[0]
+    const startPointLat = start.toArray()[1]
+    const endPointLng = end.toArray()[0]
+    const endPointLag = end.toArray()[1]
+
     const query = await fetch(
-      `https://api.mapbox.com/directions/v5/mapbox/driving/${start[0]},${start[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`,
+      `https://api.mapbox.com/directions/v5/mapbox/driving/${startPointLng},${startPointLat};${endPointLng},${endPointLag}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`,
       { method: 'GET' }
     )
     const json = await query.json()
@@ -90,8 +95,8 @@ export default function MapBox(): JSX.Element {
         },
       ],
     }
-    map.current
-      ? map.current.fitBounds([location1, location2], {
+    map.current && location1 && location2
+      ? map.current.fitBounds(new mapboxgl.LngLatBounds(location1, location2), {
           padding: { top: 100, bottom: 100, left: 100, right: 100 },
         })
       : null
@@ -133,7 +138,7 @@ export default function MapBox(): JSX.Element {
     }
     if (map.current?.getSource('point')) {
       map.current.getSource('point').setData(pointData)
-    } else {
+    } else if (location1) {
       map.current?.addLayer({
         id: 'point',
         type: 'circle',
@@ -191,10 +196,10 @@ export default function MapBox(): JSX.Element {
   }
 
   function onSet() {
-    if (location1.length < 1) {
+    if (!location1) {
       setLocation1(location)
       setLocationName1(locationName)
-    } else if (location2.length < 1) {
+    } else if (!location2) {
       setLocation2(location)
       setLocationName2(locationName)
     } else {
@@ -216,7 +221,7 @@ export default function MapBox(): JSX.Element {
     }
   }
 
-  getRoute(location1, location2)
+  location1 && location2 ? getRoute(location1, location2) : null
 
   return (
     <>
