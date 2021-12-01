@@ -11,6 +11,7 @@ import InputPageButton from '../InputPageButton/InputPageButton'
 import NavigationButton from '../NavigationButton/NavigationButton'
 import NavigationButtonMapIcon from '../../Icons/NavigationButtonMapIcon'
 import NavigationButtonBackIcon from '../../Icons/NavigationButtonBackIcon'
+import * as turf from '@turf/turf'
 
 if (typeof import.meta.env.VITE_MAPBOX_ACCESSKEY === 'string') {
   mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESSKEY
@@ -77,6 +78,7 @@ export default function MapBox(): JSX.Element {
     )
     const json = await query.json()
     const data = json.routes[0]
+
     setDistance(data.distance)
     const route = data.geometry.coordinates
 
@@ -212,7 +214,26 @@ export default function MapBox(): JSX.Element {
         },
       })
     }
+    // get middle point between location1 and location2 (strait line)
+    const point1 = location1 ? turf.point(location1) : null
+    const point2 = location2 ? turf.point(location2) : null
+    const point1Coords = point1?.geometry.coordinates
+    const point2Coords = point2?.geometry.coordinates
+
+    const midpoint = turf.midpoint(
+      point1Coords as GeoJSON.Position,
+      point2Coords as GeoJSON.Position
+    )
+    const midpointCoords = midpoint.geometry.coordinates
+    console.log(midpointCoords)
+
+    if (map.current) {
+      const marker = new mapboxgl.Marker()
+        .setLngLat(midpointCoords as LngLatLike)
+        .addTo(map.current)
+    }
   }
+
   // if locations are set
   function onSet() {
     if (!location1) {
