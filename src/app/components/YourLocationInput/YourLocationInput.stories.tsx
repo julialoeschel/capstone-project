@@ -3,7 +3,8 @@ import YourLocationInput from './YourLocationInput'
 
 export default {
   title: 'Component/YourLocationInput',
-  component: 'YourLocationInput',
+  component: YourLocationInput,
+  parameters: { layout: 'fullscreen' },
 }
 
 export const FullInputs = (): JSX.Element => (

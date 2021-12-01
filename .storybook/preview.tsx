@@ -17,6 +17,7 @@ export const parameters = {
 
 addDecorator((story) => (
   <MemoryRouter>
-    <GlobalStyles>{story()}</GlobalStyles>
+    <GlobalStyles />
+    {story()}
   </MemoryRouter>
 ))

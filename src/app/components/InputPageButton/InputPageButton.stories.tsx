@@ -5,6 +5,7 @@ import InputPageButton from './InputPageButton'
 export default {
   title: 'Component/InputPageButton',
   component: 'InputPageButton',
+  parameters: { layout: 'fullscreen' },
 }
 
 export const setLocation = (): JSX.Element => (
