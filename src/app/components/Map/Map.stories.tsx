@@ -5,6 +5,7 @@ import Map from './Map'
 export default {
   title: 'Component/Map',
   component: 'Map',
+  parameters: { layout: 'fullscreen' },
 }
 
 export const Regular = (): JSX.Element => <Map />

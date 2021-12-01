@@ -7,6 +7,7 @@ import NavigationButton from './NavigationButton'
 export default {
   title: 'Component/NavigationButton',
   component: NavigationButton,
+  parameters: { layout: 'fullscreen' },
 }
 
 export const Map = (): JSX.Element => (
