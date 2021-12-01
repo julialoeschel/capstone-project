@@ -116,19 +116,19 @@ export default function MapBox(): JSX.Element {
         },
       ],
     }
-
-    map.current && location1 && location2
-      ? map.current.fitBounds(
-          new mapboxgl.LngLatBounds(
-            location1 as LngLatLike,
-            location2 as LngLatLike
-          ),
-          {
-            padding: { top: 100, bottom: 100, left: 100, right: 100 },
-          }
-        )
-      : null
-
+    //center map over route
+    if (map.current && location1 && location2) {
+      map.current.fitBounds(
+        new mapboxgl.LngLatBounds(
+          location1 as LngLatLike,
+          location2 as LngLatLike
+        ),
+        {
+          padding: { top: 100, bottom: 100, left: 100, right: 100 },
+        }
+      )
+    }
+    //make route
     const mapRouteSource = map.current?.getSource('route')
 
     if (mapRouteSource?.type === 'geojson') {
@@ -152,6 +152,7 @@ export default function MapBox(): JSX.Element {
         },
       })
     }
+    //draw point on location 1
     const mapPointSource = map.current?.getSource('point')
     if (mapPointSource?.type === 'geojson') {
       mapPointSource.setData(pointData)
@@ -181,11 +182,11 @@ export default function MapBox(): JSX.Element {
         },
       })
     }
+    //draw point on location 2 (endpoint)
     const mapEndSource = map.current?.getSource('end')
     if (mapEndSource?.type === 'geojson') {
       mapEndSource.setData(endData)
     } else if (location2) {
-      const coordinates = location2
       map.current?.addLayer({
         id: 'end',
         type: 'circle',
@@ -199,7 +200,7 @@ export default function MapBox(): JSX.Element {
                 properties: {},
                 geometry: {
                   type: 'Point',
-                  coordinates,
+                  coordinates: location2,
                 },
               },
             ],
@@ -212,7 +213,7 @@ export default function MapBox(): JSX.Element {
       })
     }
   }
-
+  // if locations are set
   function onSet() {
     if (!location1) {
       setLocation1(location)
@@ -224,13 +225,14 @@ export default function MapBox(): JSX.Element {
       alert('both locations are set')
     }
   }
-
+  // if click on clear
   function onClear() {
     setLocation1(null)
     setLocation2(null)
     setLocationName1('')
     setLocationName2('')
   }
+  // switch to the other page
   function showMap() {
     if (!showMapPage && locationName1 && locationName2) {
       setShowMapPage(!showMapPage)
@@ -246,8 +248,6 @@ export default function MapBox(): JSX.Element {
   }
 
   location1 && location2 ? getRoute(location1, location2) : null
-
-  console.log(location1, location2)
 
   return (
     <>
@@ -296,7 +296,6 @@ const InputContainer = styled.div`
   display: grid;
   gap: 10px;
   padding: 20px;
-  height: 100%vh;
 `
 
 const MapContainer = styled.div`
