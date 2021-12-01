@@ -1,6 +1,6 @@
 import React from 'react'
-import NavigationButtonBackIncon from '../../Incons/NavigationButtonBackIcon'
-import NavigationButtonMapIncon from '../../Incons/NavigationButtonMapIcon'
+import NavigationButtonBackIncon from '../../Icons/NavigationButtonBackIcon'
+import NavigationButtonMapIncon from '../../Icons/NavigationButtonMapIcon'
 import NavigationButton from './NavigationButton'
 
 // test if storybook works

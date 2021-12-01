@@ -1,6 +1,6 @@
 import 'mapbox-gl/dist/mapbox-gl.css'
 import React, { useEffect, useRef, useState } from 'react'
-import type { Map } from 'mapbox-gl'
+import type { LngLatLike, Map } from 'mapbox-gl'
 import mapboxgl from 'mapbox-gl'
 import styled from 'styled-components'
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
@@ -22,12 +22,12 @@ export default function MapBox(): JSX.Element {
   const mapContainer = useRef<HTMLDivElement | null>(null)
   const map = useRef<null | Map>(null)
   const [distance, setDistance] = useState<number>(0)
-  const [location, setLocation] = useState<number[]>([])
+  const [location, setLocation] = useState<GeoJSON.Position | null>(null)
   const [locationName, setLocationName] = useState<string>('')
   const [locationName1, setLocationName1] = useState<string>('')
   const [locationName2, setLocationName2] = useState<string>('')
-  const [location1, setLocation1] = useState<number[]>([])
-  const [location2, setLocation2] = useState<number[]>([])
+  const [location1, setLocation1] = useState<GeoJSON.Position | null>(null)
+  const [location2, setLocation2] = useState<GeoJSON.Position | null>(null)
   const [showMapPage, setShowMapPage] = useState<boolean>(false)
 
   // initialize map only once
@@ -39,6 +39,13 @@ export default function MapBox(): JSX.Element {
       center: [10, 53.55],
       zoom: 7,
     })
+
+    if (map.current) {
+      map.current.on('load', function () {
+        map.current?.resize()
+      })
+    }
+
     //add MapControl
     const mapControl = new mapboxgl.NavigationControl()
     map.current.addControl(mapControl)
@@ -57,10 +64,15 @@ export default function MapBox(): JSX.Element {
     })
   }, [])
 
-  // get Distance from API to [7.43861, 46.95083] (its Bremen) and draw route
-  async function getRoute(start: number[], end: number[]) {
+  // get Distance from API
+  async function getRoute(start: GeoJSON.Position, end: GeoJSON.Position) {
+    const startPointLng = start[0]
+    const startPointLat = start[1]
+    const endPointLng = end[0]
+    const endPointLat = end[1]
+
     const query = await fetch(
-      `https://api.mapbox.com/directions/v5/mapbox/driving/${start[0]},${start[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`,
+      `https://api.mapbox.com/directions/v5/mapbox/driving/${startPointLng},${startPointLat};${endPointLng},${endPointLat}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`,
       { method: 'GET' }
     )
     const json = await query.json()
@@ -68,7 +80,7 @@ export default function MapBox(): JSX.Element {
     setDistance(data.distance)
     const route = data.geometry.coordinates
 
-    const geojson = {
+    const geojson: GeoJSON.Feature<GeoJSON.Geometry> = {
       type: 'Feature',
       properties: {},
       geometry: {
@@ -77,7 +89,7 @@ export default function MapBox(): JSX.Element {
       },
     }
 
-    const pointData = {
+    const pointData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
       type: 'FeatureCollection',
       features: [
         {
@@ -85,33 +97,42 @@ export default function MapBox(): JSX.Element {
           properties: {},
           geometry: {
             type: 'Point',
-            coordinates: location1,
+            coordinates: location1 as GeoJSON.Position,
           },
         },
       ],
     }
-    map.current
-      ? map.current.fitBounds([location1, location2], {
+
+    const endData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'Point',
+            coordinates: location2 as GeoJSON.Position,
+          },
+        },
+      ],
+    }
+    //center map over route
+    if (map.current && location1 && location2) {
+      map.current.fitBounds(
+        new mapboxgl.LngLatBounds(
+          location1 as LngLatLike,
+          location2 as LngLatLike
+        ),
+        {
           padding: { top: 100, bottom: 100, left: 100, right: 100 },
-        })
-      : null
-
-    const endData = {
-      type: 'FeatureCollection',
-      features: [
-        {
-          type: 'Feature',
-          properties: {},
-          geometry: {
-            type: 'Point',
-            coordinates: location2,
-          },
-        },
-      ],
+        }
+      )
     }
+    //make route
+    const mapRouteSource = map.current?.getSource('route')
 
-    if (map.current?.getSource('route')) {
-      map.current.getSource('route').setData(geojson)
+    if (mapRouteSource?.type === 'geojson') {
+      mapRouteSource.setData(geojson)
     } else {
       map.current?.addLayer({
         id: 'route',
@@ -131,9 +152,11 @@ export default function MapBox(): JSX.Element {
         },
       })
     }
-    if (map.current?.getSource('point')) {
-      map.current.getSource('point').setData(pointData)
-    } else {
+    //draw point on location 1
+    const mapPointSource = map.current?.getSource('point')
+    if (mapPointSource?.type === 'geojson') {
+      mapPointSource.setData(pointData)
+    } else if (location1) {
       map.current?.addLayer({
         id: 'point',
         type: 'circle',
@@ -159,10 +182,11 @@ export default function MapBox(): JSX.Element {
         },
       })
     }
-
-    if (map.current?.getLayer('end')) {
-      map.current.getSource('end').setData(endData)
-    } else {
+    //draw point on location 2 (endpoint)
+    const mapEndSource = map.current?.getSource('end')
+    if (mapEndSource?.type === 'geojson') {
+      mapEndSource.setData(endData)
+    } else if (location2) {
       map.current?.addLayer({
         id: 'end',
         type: 'circle',
@@ -189,68 +213,94 @@ export default function MapBox(): JSX.Element {
       })
     }
   }
-
+  // if locations are set
   function onSet() {
-    if (location1.length < 1) {
+    if (!location1) {
       setLocation1(location)
       setLocationName1(locationName)
-    } else if (location2.length < 1) {
+    } else if (!location2) {
       setLocation2(location)
       setLocationName2(locationName)
     } else {
       alert('both locations are set')
     }
   }
-
+  // if click on clear
   function onClear() {
+    setLocation1(null)
+    setLocation2(null)
     setLocationName1('')
     setLocationName2('')
   }
+  // switch to the other page
   function showMap() {
-    setShowMapPage(!showMapPage)
-    console.log(showMapPage)
+    if (!showMapPage && locationName1 && locationName2) {
+      setShowMapPage(!showMapPage)
+    } else if (showMapPage) {
+      setShowMapPage(!showMapPage)
+      setLocation1(null)
+      setLocation2(null)
+      setLocationName1('')
+      setLocationName2('')
+    } else {
+      alert('please set both inputs')
+    }
   }
 
-  getRoute(location1, location2)
+  location1 && location2 ? getRoute(location1, location2) : null
 
   return (
     <>
-      <InputContainer>
-        <h1>See U There</h1>
+      <InputPage hidden={showMapPage}>
+        <InputContainer>
+          <h1>See U There</h1>
 
-        <InputPageButton onClick={() => onSet()}>set location</InputPageButton>
-        <LocationInput id="locationInput"></LocationInput>
-        <YourLocationInput
-          locationName1={locationName1}
-          locationName2={locationName2}
-        />
-        <InputPageButton onClick={() => onClear()}>
-          clear all locations
-        </InputPageButton>
+          <InputPageButton onClick={() => onSet()}>
+            set location
+          </InputPageButton>
+          <LocationInput id="locationInput"></LocationInput>
+          <YourLocationInput
+            locationName1={locationName1}
+            locationName2={locationName2}
+          />
+          <InputPageButton onClick={() => onClear()}>
+            clear all locations
+          </InputPageButton>
+          <NavigationButton onClick={() => showMap()}>
+            <NavigationButtonMapIcon />
+          </NavigationButton>
+        </InputContainer>
+      </InputPage>
+      <MapPage hidden={showMapPage}>
+        <span>Distance: {distance} m</span>
+        <MapContainer ref={mapContainer} className="map-container" />
         <NavigationButton onClick={() => showMap()}>
-          <NavigationButtonMapIcon />
+          <NavigationButtonBackIcon />
         </NavigationButton>
-      </InputContainer>
-
-      <span>Distance: {distance} m</span>
-      <MapContainer ref={mapContainer} className="map-container" />
-      <NavigationButton onClick={() => showMap()}>
-        <NavigationButtonBackIcon />
-      </NavigationButton>
+      </MapPage>
     </>
   )
 }
+
+const InputPage = styled.div`
+  display: ${(props) => (props.hidden ? 'none' : 'block')};
+`
+const MapPage = styled.div`
+  display: ${(props) => (props.hidden ? 'block' : 'none')};
+  height: 100vh;
+
+  position: relative;
+`
 
 const InputContainer = styled.div`
   display: grid;
   gap: 10px;
   padding: 20px;
-  height: 100%vh;
 `
 
 const MapContainer = styled.div`
-  height: 100vh;
-  width: 90vw;
+  height: 80vh;
+
   position: relative;
   margin: auto;
   margin-top: 30px;
