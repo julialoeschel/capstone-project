@@ -1,6 +1,7 @@
 import 'mapbox-gl/dist/mapbox-gl.css'
 import React, { useEffect, useRef, useState } from 'react'
 import type { LngLatLike, Map } from 'mapbox-gl'
+
 import mapboxgl from 'mapbox-gl'
 import styled from 'styled-components'
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
@@ -11,6 +12,7 @@ import InputPageButton from '../InputPageButton/InputPageButton'
 import NavigationButton from '../NavigationButton/NavigationButton'
 import NavigationButtonMapIcon from '../../Icons/NavigationButtonMapIcon'
 import NavigationButtonBackIcon from '../../Icons/NavigationButtonBackIcon'
+import * as turf from '@turf/turf'
 
 if (typeof import.meta.env.VITE_MAPBOX_ACCESSKEY === 'string') {
   mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESSKEY
@@ -77,6 +79,7 @@ export default function MapBox(): JSX.Element {
     )
     const json = await query.json()
     const data = json.routes[0]
+
     setDistance(data.distance)
     const route = data.geometry.coordinates
 
@@ -213,6 +216,23 @@ export default function MapBox(): JSX.Element {
       })
     }
   }
+
+  // get middle point between location1 and location2 (strait line)
+  let midpoint: LngLatLike | undefined = undefined
+  if (location1 && location2) {
+    const point1 = turf.point(location1)
+    const point2 = turf.point(location2)
+    const point1Coords: turf.Coord = point1.geometry.coordinates
+    const point2Coords: turf.Coord = point2?.geometry.coordinates
+
+    midpoint = turf.midpoint(point1Coords, point2Coords).geometry
+      .coordinates as LngLatLike
+  }
+  const marker =
+    map.current && midpoint
+      ? new mapboxgl.Marker().setLngLat(midpoint).addTo(map.current)
+      : null
+
   // if locations are set
   function onSet() {
     if (!location1) {
@@ -246,7 +266,7 @@ export default function MapBox(): JSX.Element {
       alert('please set both inputs')
     }
   }
-
+  const middle: number[] = midpoint as number[]
   location1 && location2 ? getRoute(location1, location2) : null
 
   return (
@@ -272,7 +292,11 @@ export default function MapBox(): JSX.Element {
         </InputContainer>
       </InputPage>
       <MapPage hidden={showMapPage}>
-        <span>Distance: {distance} m</span>
+        <span>Drivingdistance: {distance} m</span>
+        <br />
+        <span>MiddleLng : {midpoint ? middle[0] : null},</span>
+        <br />
+        <span>MiddleLat : {midpoint ? middle[1] : null},</span>
         <MapContainer ref={mapContainer} className="map-container" />
         <NavigationButton onClick={() => showMap()}>
           <NavigationButtonBackIcon />
