@@ -1,6 +1,7 @@
 import 'mapbox-gl/dist/mapbox-gl.css'
 import React, { useEffect, useRef, useState } from 'react'
 import type { LngLatLike, Map } from 'mapbox-gl'
+
 import mapboxgl from 'mapbox-gl'
 import styled from 'styled-components'
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
@@ -214,25 +215,23 @@ export default function MapBox(): JSX.Element {
         },
       })
     }
-    // get middle point between location1 and location2 (strait line)
-    const point1 = location1 ? turf.point(location1) : null
-    const point2 = location2 ? turf.point(location2) : null
-    const point1Coords = point1?.geometry.coordinates
-    const point2Coords = point2?.geometry.coordinates
-
-    const midpoint = turf.midpoint(
-      point1Coords as GeoJSON.Position,
-      point2Coords as GeoJSON.Position
-    )
-    const midpointCoords = midpoint.geometry.coordinates
-    console.log(midpointCoords)
-
-    if (map.current) {
-      const marker = new mapboxgl.Marker()
-        .setLngLat(midpointCoords as LngLatLike)
-        .addTo(map.current)
-    }
   }
+
+  // get middle point between location1 and location2 (strait line)
+  let midpoint: LngLatLike | undefined = undefined
+  if (location1 && location2) {
+    const point1 = turf.point(location1)
+    const point2 = turf.point(location2)
+    const point1Coords: turf.Coord = point1.geometry.coordinates
+    const point2Coords: turf.Coord = point2?.geometry.coordinates
+
+    midpoint = turf.midpoint(point1Coords, point2Coords).geometry
+      .coordinates as LngLatLike
+  }
+  let marker =
+    map.current && midpoint
+      ? new mapboxgl.Marker().setLngLat(midpoint).addTo(map.current)
+      : null
 
   // if locations are set
   function onSet() {
@@ -293,7 +292,12 @@ export default function MapBox(): JSX.Element {
         </InputContainer>
       </InputPage>
       <MapPage hidden={showMapPage}>
-        <span>Distance: {distance} m</span>
+        <span>Drivingdistance: {distance} m</span>
+        <br />
+        <span>
+          Middle : {midpoint ? midpoint[0] : null},
+          {midpoint ? midpoint[1] : null}
+        </span>
         <MapContainer ref={mapContainer} className="map-container" />
         <NavigationButton onClick={() => showMap()}>
           <NavigationButtonBackIcon />
