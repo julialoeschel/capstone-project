@@ -228,11 +228,11 @@ export default function MapBox(): JSX.Element {
     midpoint = turf.midpoint(point1Coords, point2Coords).geometry
       .coordinates as LngLatLike
   }
-  let marker =
+  const marker =
     map.current && midpoint
       ? new mapboxgl.Marker().setLngLat(midpoint).addTo(map.current)
       : null
-
+  console.log(marker)
   // if locations are set
   function onSet() {
     if (!location1) {
@@ -294,10 +294,7 @@ export default function MapBox(): JSX.Element {
       <MapPage hidden={showMapPage}>
         <span>Drivingdistance: {distance} m</span>
         <br />
-        <span>
-          Middle : {midpoint ? midpoint[0] : null},
-          {midpoint ? midpoint[1] : null}
-        </span>
+        <span>Middle : {midpoint ? midpoint : null},</span>
         <MapContainer ref={mapContainer} className="map-container" />
         <NavigationButton onClick={() => showMap()}>
           <NavigationButtonBackIcon />
