@@ -345,6 +345,3 @@ const LocationInput = styled.span`
   padding: 10px;
   border-radius: 0.4em;
 `
-function useNavigation() {
-  throw new Error('Function not implemented.')
-}
