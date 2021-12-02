@@ -232,7 +232,7 @@ export default function MapBox(): JSX.Element {
     map.current && midpoint
       ? new mapboxgl.Marker().setLngLat(midpoint).addTo(map.current)
       : null
-  console.log(marker)
+
   // if locations are set
   function onSet() {
     if (!location1) {
@@ -266,7 +266,7 @@ export default function MapBox(): JSX.Element {
       alert('please set both inputs')
     }
   }
-
+  const middle: number[] = midpoint as number[]
   location1 && location2 ? getRoute(location1, location2) : null
 
   return (
@@ -294,7 +294,9 @@ export default function MapBox(): JSX.Element {
       <MapPage hidden={showMapPage}>
         <span>Drivingdistance: {distance} m</span>
         <br />
-        <span>Middle : {midpoint ? midpoint : null},</span>
+        <span>MiddleLng : {midpoint ? middle[0] : null},</span>
+        <br />
+        <span>MiddleLat : {midpoint ? middle[1] : null},</span>
         <MapContainer ref={mapContainer} className="map-container" />
         <NavigationButton onClick={() => showMap()}>
           <NavigationButtonBackIcon />
