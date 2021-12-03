@@ -233,7 +233,7 @@ export default function MapBox(): JSX.Element {
     map.current && midpoint
       ? new mapboxgl.Marker().setLngLat(midpoint).addTo(map.current)
       : null
-
+  marker
   // if locations are set
   function onSet() {
     if (!location1) {
