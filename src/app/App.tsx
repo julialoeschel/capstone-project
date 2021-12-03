@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import Details from './pages/Details'
-import MapBox from './pages/Map'
+import Details from './pages/Details/Details'
+import MapBox from './pages/Map/Map'
 
 export default function App(): JSX.Element {
   return (

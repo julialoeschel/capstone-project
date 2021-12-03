@@ -6,13 +6,13 @@ import styled from 'styled-components'
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
 import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
-import YourLocationInput from '../components/YourLocationInput/YourLocationInput'
-import InputPageButton from '../components/InputPageButton/InputPageButton'
-import NavigationButton from '../components/NavigationButton/NavigationButton'
-import NavigationButtonMapIcon from '../Icons/NavigationButtonMapIcon'
-import NavigationButtonBackIcon from '../Icons/NavigationButtonBackIcon'
+import YourLocationInput from '../../components/YourLocationInput/YourLocationInput'
+import InputPageButton from '../../components/InputPageButton/InputPageButton'
+import NavigationButton from '../../components/NavigationButton/NavigationButton'
+import NavigationButtonMapIcon from '../../Icons/NavigationButtonMapIcon'
+import NavigationButtonBackIcon from '../../Icons/NavigationButtonBackIcon'
 import * as turf from '@turf/turf'
-import NavigationButtonMoreIcon from '../Icons/NavigationButtonMoreIcon'
+import NavigationButtonMoreIcon from '../../Icons/NavigationButtonMoreIcon'
 import { useNavigate } from 'react-router'
 
 if (typeof import.meta.env.VITE_MAPBOX_ACCESSKEY === 'string') {
@@ -20,8 +20,13 @@ if (typeof import.meta.env.VITE_MAPBOX_ACCESSKEY === 'string') {
 } else {
   throw new Error('no KEY provided')
 }
+type MapBoxProps = {
+  comingFromDetailsPage: boolean
+}
 
-export default function MapBox(): JSX.Element {
+export default function MapBox({
+  comingFromDetailsPage,
+}: MapBoxProps): JSX.Element {
   const mapContainer = useRef<HTMLDivElement | null>(null)
   const map = useRef<null | Map>(null)
   const [distance, setDistance] = useState<number>(0)
@@ -255,14 +260,21 @@ export default function MapBox(): JSX.Element {
   }
   // switch to the other page
   function showMap() {
-    if (!showMapPage && locationName1 && locationName2) {
+    if (
+      !comingFromDetailsPage &&
+      !showMapPage &&
+      locationName1 &&
+      locationName2
+    ) {
       setShowMapPage(!showMapPage)
-    } else if (showMapPage) {
+    } else if (!comingFromDetailsPage && showMapPage) {
       setShowMapPage(!showMapPage)
       setLocation1(null)
       setLocation2(null)
       setLocationName1('')
       setLocationName2('')
+    } else if (comingFromDetailsPage) {
+      setShowMapPage(!showMapPage)
     } else {
       alert('please set both inputs')
     }
