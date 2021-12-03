@@ -20,13 +20,8 @@ if (typeof import.meta.env.VITE_MAPBOX_ACCESSKEY === 'string') {
 } else {
   throw new Error('no KEY provided')
 }
-type MapBoxProps = {
-  comingFromDetailsPage: boolean
-}
 
-export default function MapBox({
-  comingFromDetailsPage,
-}: MapBoxProps): JSX.Element {
+export default function MapBox(): JSX.Element {
   const mapContainer = useRef<HTMLDivElement | null>(null)
   const map = useRef<null | Map>(null)
   const [distance, setDistance] = useState<number>(0)
@@ -244,9 +239,11 @@ export default function MapBox({
     if (!location1) {
       setLocation1(location)
       setLocationName1(locationName)
+      localStorage.setItem('Location1', JSON.stringify(locationName))
     } else if (!location2) {
       setLocation2(location)
       setLocationName2(locationName)
+      localStorage.setItem('Location2', JSON.stringify(locationName))
     } else {
       alert('both locations are set')
     }
@@ -260,26 +257,21 @@ export default function MapBox({
   }
   // switch to the other page
   function showMap() {
-    if (
-      !comingFromDetailsPage &&
-      !showMapPage &&
-      locationName1 &&
-      locationName2
-    ) {
+    if (!showMapPage && locationName1 && locationName2) {
       setShowMapPage(!showMapPage)
-    } else if (!comingFromDetailsPage && showMapPage) {
+    } else if (showMapPage) {
       setShowMapPage(!showMapPage)
       setLocation1(null)
       setLocation2(null)
       setLocationName1('')
       setLocationName2('')
-    } else if (comingFromDetailsPage) {
-      setShowMapPage(!showMapPage)
     } else {
       alert('please set both inputs')
     }
   }
   const middle: number[] = midpoint as number[]
+  localStorage.setItem('middle', JSON.stringify(middle))
+
   location1 && location2 ? getRoute(location1, location2) : null
 
   const navigate = useNavigate()
