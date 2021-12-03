@@ -270,8 +270,8 @@ export default function MapBox(): JSX.Element {
     }
   }
   const middle: number[] = midpoint as number[]
-  localStorage.setItem('middle', JSON.stringify(middle))
-
+  middle ? localStorage.setItem('middleLng', JSON.stringify(middle[0])) : null
+  middle ? localStorage.setItem('middleLat', JSON.stringify(middle[1])) : null
   location1 && location2 ? getRoute(location1, location2) : null
 
   const navigate = useNavigate()
@@ -304,10 +304,7 @@ export default function MapBox(): JSX.Element {
       </InputPage>
       <MapPage hidden={showMapPage}>
         <span>Drivingdistance: {distance} m</span>
-        <br />
-        <span>MiddleLng : {midpoint ? middle[0] : null},</span>
-        <br />
-        <span>MiddleLat : {midpoint ? middle[1] : null},</span>
+
         <MapContainer ref={mapContainer} className="map-container" />
         <NavigationButton onClick={() => showMap()}>
           <NavigationButtonBackIcon />

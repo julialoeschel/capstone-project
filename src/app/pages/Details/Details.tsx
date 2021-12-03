@@ -5,9 +5,11 @@ import NavigationButtonMapIcon from '../../Icons/NavigationButtonMapIcon'
 
 export default function Details(): JSX.Element {
   const navigate = useNavigate()
-  const middle = localStorage.getItem('middle')
-  const locationName1 = localStorage.getItem('Location1')
-  const locationName2 = localStorage.getItem('Location2')
+  const middleLng = JSON.parse(localStorage.getItem('middleLng') as string)
+  const middleLat = JSON.parse(localStorage.getItem('middleLat') as string)
+  const locationName1 = JSON.parse(localStorage.getItem('Location1') as string)
+  const locationName2 = JSON.parse(localStorage.getItem('Location2') as string)
+
   return (
     <>
       <h1>See U There</h1>
@@ -18,7 +20,10 @@ export default function Details(): JSX.Element {
       </section>
       <section>
         <dl>meet you here</dl>
-        <dt>{middle}</dt>
+        <dt>
+          {parseFloat(middleLng).toFixed(4)} and{' '}
+          {parseFloat(middleLat).toFixed(4)}
+        </dt>
       </section>
       <NavigationButton
         onClick={() => {
