@@ -10,6 +10,8 @@ export default function Details(): JSX.Element {
   const locationName1 = JSON.parse(localStorage.getItem('Location1') as string)
   const locationName2 = JSON.parse(localStorage.getItem('Location2') as string)
 
+  localStorage.setItem('CominFromDetailsPage', 'true')
+
   return (
     <>
       <h1>See U There</h1>
