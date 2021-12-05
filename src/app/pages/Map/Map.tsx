@@ -6,13 +6,13 @@ import styled from 'styled-components'
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
 import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
-import YourLocationInput from '../components/YourLocationInput/YourLocationInput'
-import InputPageButton from '../components/InputPageButton/InputPageButton'
-import NavigationButton from '../components/NavigationButton/NavigationButton'
-import NavigationButtonMapIcon from '../Icons/NavigationButtonMapIcon'
-import NavigationButtonBackIcon from '../Icons/NavigationButtonBackIcon'
+import YourLocationInput from '../../components/YourLocationInput/YourLocationInput'
+import InputPageButton from '../../components/InputPageButton/InputPageButton'
+import NavigationButton from '../../components/NavigationButton/NavigationButton'
+import NavigationButtonMapIcon from '../../Icons/NavigationButtonMapIcon'
+import NavigationButtonBackIcon from '../../Icons/NavigationButtonBackIcon'
 import * as turf from '@turf/turf'
-import NavigationButtonMoreIcon from '../Icons/NavigationButtonMoreIcon'
+import NavigationButtonMoreIcon from '../../Icons/NavigationButtonMoreIcon'
 import { useNavigate } from 'react-router'
 
 if (typeof import.meta.env.VITE_MAPBOX_ACCESSKEY === 'string') {
@@ -233,15 +233,17 @@ export default function MapBox(): JSX.Element {
     map.current && midpoint
       ? new mapboxgl.Marker().setLngLat(midpoint).addTo(map.current)
       : null
-
+  marker
   // if locations are set
   function onSet() {
     if (!location1) {
       setLocation1(location)
       setLocationName1(locationName)
+      localStorage.setItem('Location1', JSON.stringify(locationName))
     } else if (!location2) {
       setLocation2(location)
       setLocationName2(locationName)
+      localStorage.setItem('Location2', JSON.stringify(locationName))
     } else {
       alert('both locations are set')
     }
@@ -268,6 +270,8 @@ export default function MapBox(): JSX.Element {
     }
   }
   const middle: number[] = midpoint as number[]
+  middle ? localStorage.setItem('middleLng', JSON.stringify(middle[0])) : null
+  middle ? localStorage.setItem('middleLat', JSON.stringify(middle[1])) : null
   location1 && location2 ? getRoute(location1, location2) : null
 
   const navigate = useNavigate()
@@ -300,10 +304,7 @@ export default function MapBox(): JSX.Element {
       </InputPage>
       <MapPage hidden={showMapPage}>
         <span>Drivingdistance: {distance} m</span>
-        <br />
-        <span>MiddleLng : {midpoint ? middle[0] : null},</span>
-        <br />
-        <span>MiddleLat : {midpoint ? middle[1] : null},</span>
+
         <MapContainer ref={mapContainer} className="map-container" />
         <NavigationButton onClick={() => showMap()}>
           <NavigationButtonBackIcon />

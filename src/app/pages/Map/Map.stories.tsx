@@ -1,5 +1,5 @@
 import React from 'react'
-import Map from '../../pages/Map'
+import Map from './Map'
 
 // test if storybook works
 export default {
