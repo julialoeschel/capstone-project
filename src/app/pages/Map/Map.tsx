@@ -35,6 +35,17 @@ export default function MapBox(): JSX.Element {
 
   // initialize map only once
   useEffect(() => {
+    //if comin from details page, initilize with choosen locations
+    if (localStorage.getItem('CominFromDetailsPage') === 'true') {
+      setLocation1(
+        JSON.parse(localStorage.getItem('Location1Coords') as string)
+      )
+      setLocation2(
+        JSON.parse(localStorage.getItem('Location2Coords') as string)
+      )
+      localStorage.setItem('CominFromDetailsPage', 'false')
+    }
+
     if (map && map.current) return
     map.current = new mapboxgl.Map({
       container: mapContainer.current as HTMLElement,
@@ -240,10 +251,12 @@ export default function MapBox(): JSX.Element {
       setLocation1(location)
       setLocationName1(locationName)
       localStorage.setItem('Location1', JSON.stringify(locationName))
+      localStorage.setItem('Location1Coords', JSON.stringify(location))
     } else if (!location2) {
       setLocation2(location)
       setLocationName2(locationName)
       localStorage.setItem('Location2', JSON.stringify(locationName))
+      localStorage.setItem('Location2Coords', JSON.stringify(location))
     } else {
       alert('both locations are set')
     }
