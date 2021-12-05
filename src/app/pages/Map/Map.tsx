@@ -31,7 +31,7 @@ export default function MapBox(): JSX.Element {
   const [locationName2, setLocationName2] = useState<string>('')
   const [location1, setLocation1] = useState<GeoJSON.Position | null>(null)
   const [location2, setLocation2] = useState<GeoJSON.Position | null>(null)
-  const [showMapPage, setShowMapPage] = useState<boolean>(false)
+  const [showMapPage, setShowMapPage] = useState<boolean>(true)
 
   // initialize map only once
   useEffect(() => {
@@ -39,8 +39,8 @@ export default function MapBox(): JSX.Element {
     map.current = new mapboxgl.Map({
       container: mapContainer.current as HTMLElement,
       style: 'mapbox://styles/mapbox/outdoors-v11',
-      center: [10, 53.55],
-      zoom: 7,
+      center: [10, 51],
+      zoom: 4.5,
     })
 
     if (map.current) {
@@ -229,11 +229,11 @@ export default function MapBox(): JSX.Element {
     midpoint = turf.midpoint(point1Coords, point2Coords).geometry
       .coordinates as LngLatLike
   }
-  const marker =
-    map.current && midpoint
-      ? new mapboxgl.Marker().setLngLat(midpoint).addTo(map.current)
-      : null
-  marker
+
+  map.current && midpoint
+    ? new mapboxgl.Marker().setLngLat(midpoint).addTo(map.current)
+    : null
+
   // if locations are set
   function onSet() {
     if (!location1) {
@@ -257,7 +257,10 @@ export default function MapBox(): JSX.Element {
   }
   // switch to the other page
   function showMap() {
-    if (!showMapPage && locationName1 && locationName2) {
+    if (
+      (!showMapPage && locationName1 && locationName2) ||
+      (!showMapPage && !locationName1 && !locationName2)
+    ) {
       setShowMapPage(!showMapPage)
     } else if (showMapPage) {
       setShowMapPage(!showMapPage)
