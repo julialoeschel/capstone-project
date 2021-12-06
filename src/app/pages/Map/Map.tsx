@@ -10,12 +10,12 @@ import YourLocationInput from '../../components/YourLocationInput/YourLocationIn
 import InputPageButton from '../../components/InputPageButton/InputPageButton'
 import NavigationButton from '../../components/NavigationButton/NavigationButton'
 import NavigationButtonMapIcon from '../../Icons/NavigationButtonMapIcon'
-import NavigationButtonBackIcon from '../../Icons/NavigationButtonBackIcon'
 import * as turf from '@turf/turf'
 import NavigationButtonMoreIcon from '../../Icons/NavigationButtonMoreIcon'
 import { useNavigate } from 'react-router'
 import ClearAllButton from '../../components/ClearAllButton/ClearAllButton'
 import DeletX from '../../Icons/DeleteX'
+import NavigationButtonInputIcon from '../../Icons/NavigationButtonInputIcon'
 
 if (typeof import.meta.env.VITE_MAPBOX_ACCESSKEY === 'string') {
   mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESSKEY
@@ -26,7 +26,7 @@ if (typeof import.meta.env.VITE_MAPBOX_ACCESSKEY === 'string') {
 export default function MapBox(): JSX.Element {
   const mapContainer = useRef<HTMLDivElement | null>(null)
   const map = useRef<null | Map>(null)
-  const [distance, setDistance] = useState<number>(0)
+  const [_distance, setDistance] = useState<number>(0)
   const [location, setLocation] = useState<GeoJSON.Position | null>(null)
   const [locationName, setLocationName] = useState<string>('')
   const [locationName1, setLocationName1] = useState<string>('')
@@ -324,14 +324,16 @@ export default function MapBox(): JSX.Element {
         </InputContainer>
       </InputPage>
       <MapPage hidden={showMapPage}>
-        <span>Drivingdistance: {distance} m</span>
         <MapContainer ref={mapContainer} className="map-container" />
-        <NavigationButton onClick={() => showMap()}>
-          <NavigationButtonBackIcon />
-        </NavigationButton>
-        <NavigationButton onClick={switchToMore}>
-          <NavigationButtonMoreIcon />
-        </NavigationButton>
+        <NavigationContainerInput>
+          <NavigationButton onClick={() => showMap()}>
+            <NavigationButtonInputIcon />
+          </NavigationButton>
+
+          <NavigationButton onClick={switchToMore}>
+            <NavigationButtonMoreIcon />
+          </NavigationButton>
+        </NavigationContainerInput>
       </MapPage>
     </>
   )
@@ -385,11 +387,21 @@ const NavigationContainerMap = styled.div`
 const MapPage = styled.div`
   display: ${(props) => (props.hidden ? 'block' : 'none')};
   height: 100vh;
+  margin-top: -1.9em;
+  position: relative;
 `
 
 const MapContainer = styled.div`
-  height: 80vh;
+  height: 100vh;
   position: relative;
   margin: auto;
   margin-top: 30px;
+`
+
+const NavigationContainerInput = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 7em;
+  position: relative;
+  top: -6.5em;
+  right: -1em;
 `

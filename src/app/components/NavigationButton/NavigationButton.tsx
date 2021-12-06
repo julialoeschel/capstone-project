@@ -22,6 +22,5 @@ const NavigationButtonContainer = styled.div`
   background-color: var(--color-dark-green);
   border-radius: 3em;
   display: grid;
-  //position: absolute;
   bottom: 0.5em;
 `
