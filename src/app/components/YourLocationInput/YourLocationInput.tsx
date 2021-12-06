@@ -43,6 +43,7 @@ const Location1 = styled.span`
   margin: 15px 0;
   border-radius: 0.4em;
   grid-area: location1;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 `
 const Location2 = styled.span`
   padding: 10px;
@@ -54,6 +55,7 @@ const Location2 = styled.span`
   margin: 15px 0;
   border-radius: 0.4em;
   grid-area: location2;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 `
 const Text = styled.span`
   grid-area: text;

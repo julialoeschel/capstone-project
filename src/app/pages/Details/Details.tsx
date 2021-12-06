@@ -59,6 +59,7 @@ const MyLocationsContainer = styled.section`
   border-radius: 0.7em;
   margin: 0 1.7em;
   padding: 0 1em 1em 1em;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 `
 const BoxHeading = styled.h2`
   font-weight: lighter;
@@ -73,6 +74,7 @@ const Location = styled.dl`
   background-color: var(--color-background-light);
   border-radius: 0.4em;
   margin: 0.3em;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 `
 //Middle Place
 const PlaceContainer = styled.section`
@@ -82,6 +84,7 @@ const PlaceContainer = styled.section`
   border-radius: 0.7em;
   margin: 2em 1.7em 0 1.7em;
   padding: 0 1em 1em 1em;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 `
 const NavigationContainerMap = styled.div`
   position: absolute;
