@@ -163,7 +163,7 @@ export default function MapBox(): JSX.Element {
           'line-cap': 'round',
         },
         paint: {
-          'line-color': '#2d8f43',
+          'line-color': '#2b5113',
           'line-width': 5,
           'line-opacity': 0.75,
         },
@@ -195,7 +195,7 @@ export default function MapBox(): JSX.Element {
         },
         paint: {
           'circle-radius': 10,
-          'circle-color': '#3887be',
+          'circle-color': '#ceb372',
         },
       })
     }
@@ -225,7 +225,7 @@ export default function MapBox(): JSX.Element {
         },
         paint: {
           'circle-radius': 10,
-          'circle-color': '#f30',
+          'circle-color': '#ceb372',
         },
       })
     }
@@ -244,7 +244,9 @@ export default function MapBox(): JSX.Element {
   }
 
   map.current && midpoint
-    ? new mapboxgl.Marker().setLngLat(midpoint).addTo(map.current)
+    ? new mapboxgl.Marker({ color: '#2b5113' })
+        .setLngLat(midpoint)
+        .addTo(map.current)
     : null
 
   // if locations are set
