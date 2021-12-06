@@ -316,10 +316,11 @@ export default function MapBox(): JSX.Element {
             locationName1={locationName1}
             locationName2={locationName2}
           />
-
-          <NavigationButton onClick={() => showMap()}>
-            <NavigationButtonMapIcon />
-          </NavigationButton>
+          <NavigationContainerMap>
+            <NavigationButton onClick={() => showMap()}>
+              <NavigationButtonMapIcon />
+            </NavigationButton>
+          </NavigationContainerMap>
         </InputContainer>
       </InputPage>
       <MapPage hidden={showMapPage}>
@@ -372,6 +373,12 @@ const GeocoderBox = styled.div`
     'Query Query'
     'SetItem clear';
   padding-bottom: 1em;
+`
+const NavigationContainerMap = styled.div`
+  position: absolute;
+  display: block;
+  bottom: 0.5em;
+  justify-self: center;
 `
 
 //MapPage
