@@ -26,7 +26,7 @@ if (typeof import.meta.env.VITE_MAPBOX_ACCESSKEY === 'string') {
 export default function MapBox(): JSX.Element {
   const mapContainer = useRef<HTMLDivElement | null>(null)
   const map = useRef<null | Map>(null)
-  const [_distance, setDistance] = useState<number>(0)
+  //const [distance, setDistance] = useState<number>(0)
   const [location, setLocation] = useState<GeoJSON.Position | null>(null)
   const [locationName, setLocationName] = useState<string>('')
   const [locationName1, setLocationName1] = useState<string>('')
@@ -94,7 +94,7 @@ export default function MapBox(): JSX.Element {
     const json = await query.json()
     const data = json.routes[0]
 
-    setDistance(data.distance)
+    //setDistance(data.distance)
     const route = data.geometry.coordinates
 
     const geojson: GeoJSON.Feature<GeoJSON.Geometry> = {
