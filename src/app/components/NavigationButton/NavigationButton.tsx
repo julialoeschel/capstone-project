@@ -19,8 +19,9 @@ export default function NavigationButton({
 const NavigationButtonContainer = styled.div`
   height: 4.4em;
   width: 4.5em;
-  background-color: #d9d9f3;
+  background-color: var(--color-dark-green);
   border-radius: 3em;
-  justify-self: center;
   display: grid;
+  //position: absolute;
+  bottom: 0.5em;
 `

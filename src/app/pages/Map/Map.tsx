@@ -324,7 +324,6 @@ export default function MapBox(): JSX.Element {
       </InputPage>
       <MapPage hidden={showMapPage}>
         <span>Drivingdistance: {distance} m</span>
-
         <MapContainer ref={mapContainer} className="map-container" />
         <NavigationButton onClick={() => showMap()}>
           <NavigationButtonBackIcon />
@@ -379,7 +378,6 @@ const GeocoderBox = styled.div`
 const MapPage = styled.div`
   display: ${(props) => (props.hidden ? 'block' : 'none')};
   height: 100vh;
-  position: relative;
 `
 
 const MapContainer = styled.div`
