@@ -57,4 +57,5 @@ const Location2 = styled.span`
 `
 const Text = styled.span`
   grid-area: text;
+  font-weight: lighter;
 `

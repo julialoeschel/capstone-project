@@ -347,7 +347,7 @@ const InputPage = styled.div`
 const InputContainer = styled.section`
   display: grid;
   gap: 1em;
-  padding: 0 20px;
+  padding: 0 1.7em;
   margin-top: -2em;
 `
 // inputPage upper Box
