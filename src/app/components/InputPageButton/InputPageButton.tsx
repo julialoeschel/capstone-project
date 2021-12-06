@@ -15,13 +15,15 @@ export default function InputPageButton({
 }
 
 const Button = styled.button`
-  padding: 0.7em 1.3em;
-  justify-self: center;
+  display: inline-block;
+  height: 2.5em;
+  padding: 0.5em 1.3em;
   background-color: var(--color-dark-green);
+  color: var(--color-background-light);
   border: none;
   border-radius: 0.8em;
-  color: var(--color-background-light);
   margin-left: 1.9em;
   justify-self: start;
+  align-self: center;
   grid-area: SetItem;
 `
