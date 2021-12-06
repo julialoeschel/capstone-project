@@ -14,6 +14,8 @@ import NavigationButtonBackIcon from '../../Icons/NavigationButtonBackIcon'
 import * as turf from '@turf/turf'
 import NavigationButtonMoreIcon from '../../Icons/NavigationButtonMoreIcon'
 import { useNavigate } from 'react-router'
+import ClearAllButton from '../../components/ClearAllButton/ClearAllButton'
+import DeletX from '../../Icons/DeleteX'
 
 if (typeof import.meta.env.VITE_MAPBOX_ACCESSKEY === 'string') {
   mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESSKEY
@@ -299,20 +301,22 @@ export default function MapBox(): JSX.Element {
   return (
     <>
       <InputPage hidden={showMapPage}>
+        <AppName>MidWay</AppName>
         <InputContainer>
-          <h1>See U There</h1>
-
-          <InputPageButton onClick={() => onSet()}>
-            set location
-          </InputPageButton>
-          <LocationInput id="locationInput"></LocationInput>
+          <GeocoderBox>
+            <LocationInput id="locationInput"></LocationInput>
+            <InputPageButton onClick={() => onSet()}>
+              set location
+            </InputPageButton>
+            <ClearAllButton onClick={() => onClear()}>
+              <DeletX />
+            </ClearAllButton>
+          </GeocoderBox>
           <YourLocationInput
             locationName1={locationName1}
             locationName2={locationName2}
           />
-          <InputPageButton onClick={() => onClear()}>
-            clear all locations
-          </InputPageButton>
+
           <NavigationButton onClick={() => showMap()}>
             <NavigationButtonMapIcon />
           </NavigationButton>
@@ -333,32 +337,54 @@ export default function MapBox(): JSX.Element {
   )
 }
 
+// inputPage
 const InputPage = styled.div`
   display: ${(props) => (props.hidden ? 'none' : 'block')};
 `
+
+const InputContainer = styled.section`
+  display: grid;
+  gap: 10px;
+  padding: 0 20px;
+  margin-top: -2em;
+`
+// inputPage upper Box
+const LocationInput = styled.div`
+  height: 2em;
+  padding: 1em;
+  margin: 0 0 2.2em -2em;
+  grid-area: Query;
+`
+
+const AppName = styled.h1`
+  font-size: 4em;
+  margin-top: 0;
+  font-weight: lighter;
+  text-align: center;
+`
+const GeocoderBox = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 5em;
+  grid-template-rows: 1fr 3em;
+  background-color: var(--color-background-dark);
+  border: solid var(--color-gold) 3px;
+  border-radius: 0.7em;
+  grid-template-areas:
+    'Query Query'
+    'SetItem clear';
+  padding-bottom: 1em;
+`
+
+//MapPage
 const MapPage = styled.div`
   display: ${(props) => (props.hidden ? 'block' : 'none')};
   height: 100vh;
-
   position: relative;
-`
-
-const InputContainer = styled.div`
-  display: grid;
-  gap: 10px;
-  padding: 20px;
 `
 
 const MapContainer = styled.div`
   height: 80vh;
-
   position: relative;
   margin: auto;
   margin-top: 30px;
-`
-
-const LocationInput = styled.span`
-  background-color: #e6e4e4;
-  padding: 10px;
-  border-radius: 0.4em;
 `
