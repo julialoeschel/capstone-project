@@ -69,6 +69,7 @@ export default function MapBox(): JSX.Element {
     //initiallize Geocoder and set to Div
     const geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
+      placeholder: '         find location',
     })
     geocoder.addTo('#locationInput')
 
@@ -243,13 +244,14 @@ export default function MapBox(): JSX.Element {
       .coordinates as LngLatLike
   }
 
+  //set marker
   map.current && midpoint
     ? new mapboxgl.Marker({ color: '#2b5113' })
         .setLngLat(midpoint)
         .addTo(map.current)
     : null
 
-  // if locations are set
+  // if locations are set do
   function onSet() {
     if (!location1) {
       setLocation1(location)
@@ -289,6 +291,7 @@ export default function MapBox(): JSX.Element {
       alert('please set both inputs')
     }
   }
+
   const middle: number[] = midpoint as number[]
   middle ? localStorage.setItem('middleLng', JSON.stringify(middle[0])) : null
   middle ? localStorage.setItem('middleLat', JSON.stringify(middle[1])) : null
@@ -296,9 +299,58 @@ export default function MapBox(): JSX.Element {
 
   const navigate = useNavigate()
 
+  //navigate to Deatils page
   function switchToMore() {
     navigate('/Details')
   }
+  // add PoI and diatance
+  async function GetPOI() {
+    if (location1 && location2) {
+      const query = await fetch(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/hotel.json?type=poi.hotel?&proximity=${middle[0]},${middle[1]}&access_token=${mapboxgl.accessToken}`,
+        { method: 'GET' }
+      )
+      const json = await query.json()
+      const data = json.features
+      console.log(data)
+
+      data.map((search: { geometry: { coordinates: LngLatLike } }) =>
+        map.current
+          ? new mapboxgl.Marker({ color: 'var(--color-yellow)' })
+              .setLngLat(search.geometry.coordinates)
+              .addTo(map.current)
+          : null
+      )
+    }
+    // Draw the alien search radius on the map
+    if (middle) {
+      map.current?.addLayer({
+        id: 'search-radius',
+        source: {
+          type: 'geojson',
+          data: { type: 'FeatureCollection', features: [] },
+        },
+        type: 'fill',
+        paint: {
+          'fill-color': '#f1659b',
+          'fill-opacity': 0.3,
+        },
+      })
+    }
+
+    function makeRadius(lngLatArray: LngLatLike, RadiusInKm: number) {
+      const point = turf.point(lngLatArray as GeoJSON.Position)
+      const buffered = turf.buffer(point, RadiusInKm, { units: 'kilometers' })
+      return buffered
+    }
+    const searchRadius = midpoint ? makeRadius(midpoint, 10) : null
+    console.log(searchRadius)
+    const searchRaduisget = map.current?.getSource('search-radius')
+    if (searchRaduisget?.type === 'geojson') {
+      searchRaduisget.setData(searchRadius as GeoJSON.Feature)
+    }
+  }
+  GetPOI()
 
   return (
     <>
