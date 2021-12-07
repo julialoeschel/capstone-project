@@ -19,7 +19,7 @@ export default function NavigationButton({
 const NavigationButtonContainer = styled.div`
   height: 4.4em;
   width: 4.5em;
-  background-color: var(--color-dark-green);
+  background-color: var(--color-green-700);
   border-radius: 3em;
   display: grid;
   bottom: 0.5em;

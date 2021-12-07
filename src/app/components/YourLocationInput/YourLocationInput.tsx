@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import ArrowYellow from '../ArrowYellow/ArrowYellow'
 
 type YourLocationInputProps = {
   locationName1: string
@@ -13,45 +14,9 @@ export default function YourLocationInput({
   return (
     <Container>
       <Text>Your locations are set to:</Text>
-      <svg
-        width="60"
-        height="50"
-        viewBox="0 0 117 93"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M13.4688 12.8667C34.6989 85.9508 87.089 74.826 110.63 60.1281"
-          stroke="#FFE4A0"
-          stroke-width="5"
-        />
-        <path
-          d="M95 77C109 64.2 98.1667 60.3333 91 60H111L95 77Z"
-          stroke="#FFE4A0"
-          stroke-width="5"
-        />
-      </svg>
-
+      <ArrowYellow />
       <Location1>{locationName1}</Location1>
-
-      <svg
-        width="60"
-        height="50"
-        viewBox="0 0 117 93"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M13.4688 12.8667C34.6989 85.9508 87.089 74.826 110.63 60.1281"
-          stroke="#FFE4A0"
-          stroke-width="5"
-        />
-        <path
-          d="M95 77C109 64.2 98.1667 60.3333 91 60H111L95 77Z"
-          stroke="#FFE4A0"
-          stroke-width="5"
-        />
-      </svg>
+      <ArrowYellow />
       <Location2>{locationName2}</Location2>
     </Container>
   )
@@ -61,7 +26,7 @@ const Container = styled.div`
   display: grid;
   grid-template-columns: 4em 1fr;
   grid-template-rows: 3fr;
-  background-color: var(--color-background-dark);
+  background-color: var(--color-green-500);
   border: solid var(--color-gold) 3px;
   border-radius: 0.7em;
   padding: 1em 1.9em;
@@ -77,11 +42,11 @@ const Location1 = styled.span`
   width: 13em;
   text-align: center;
   border: solid 3px var(--color-gold);
-  background-color: var(--color-background-light);
+  background-color: var(--color-green-100);
   margin: 15px 0;
   border-radius: 0.4em;
   grid-area: location1;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  box-shadow: var(--box-shadow);
 `
 const Location2 = styled.span`
   padding: 10px;
@@ -89,11 +54,11 @@ const Location2 = styled.span`
   min-height: 2.9em;
   text-align: center;
   border: solid 3px var(--color-gold);
-  background-color: var(--color-background-light);
+  background-color: var(--color-green-100);
   margin: 15px 0;
   border-radius: 0.4em;
   grid-area: location2;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  box-shadow: var(--box-shadow);
 `
 const Text = styled.span`
   grid-area: text;

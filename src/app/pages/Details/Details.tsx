@@ -54,12 +54,12 @@ const AppName = styled.h1`
 `
 const MyLocationsContainer = styled.section`
   display: grid;
-  background-color: var(--color-background-dark);
+  background-color: var(--color-green-500);
   border: solid var(--color-gold) 3px;
   border-radius: 0.7em;
   margin: 0 1.7em;
   padding: 0 1em 1em 1em;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  box-shadow: var(--box-shadow);
 `
 const BoxHeading = styled.h2`
   font-weight: lighter;
@@ -71,15 +71,15 @@ const Location = styled.dl`
   min-height: 2.9em;
   text-align: center;
   border: solid 3px var(--color-gold);
-  background-color: var(--color-background-light);
+  background-color: var(--color-green-100);
   border-radius: 0.4em;
   margin: 0.3em;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  box-shadow: var(--box-shadow);
 `
 //Middle Place
 const PlaceContainer = styled.section`
   display: grid;
-  background-color: var(--color-background-dark);
+  background-color: var(--color-green-500);
   border: solid var(--color-gold) 3px;
   border-radius: 0.7em;
   margin: 2em 1.7em 0 1.7em;

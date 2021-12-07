@@ -370,14 +370,14 @@ const GeocoderBox = styled.div`
   display: grid;
   grid-template-columns: 1fr 5em;
   grid-template-rows: 1fr 3em;
-  background-color: var(--color-background-dark);
+  background-color: var(--color-green-500);
   border: solid var(--color-gold) 3px;
   border-radius: 0.7em;
   grid-template-areas:
     'Query Query'
     'SetItem clear';
   padding-bottom: 1em;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  box-shadow: var(--box-shadow);
 `
 const NavigationContainerMap = styled.div`
   position: absolute;

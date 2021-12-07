@@ -20,7 +20,7 @@ const Button = styled.button`
   background-color: var(--color-choral);
   border: none;
   border-radius: 3em;
-  color: var(--color-background-light);
+  color: var(--color-green-100);
   grid-area: clear;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  box-shadow: var(--box-shadow);
 `

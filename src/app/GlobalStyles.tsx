@@ -13,19 +13,17 @@ const GlobalStyles = createGlobalStyle`
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: var( --color-dark-green);
-    background-color: var( --color-background-light)
+  color: var( --color-green-700);
+    background-color: var( --color-green-100)
 }
 :root {
-  --color-background-light: #f6f5f2;
-  --color-background-dark: #d1e1db;
+  --color-green-100: #f6f5f2;
+  --color-green-500: #d1e1db;
+  --color-green-700: #2b5113;
   --color-gold: #ceb372;
   --color-yellow: #ffe4a0;
   --color-choral: #f47851;
-  --color-dark-green: #2b5113;
-
-
-
+  --box-shadow:rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
 
 code {
