@@ -1,5 +1,5 @@
 import React from 'react'
-import NavigationButtonBackIncon from '../../Icons/NavigationButtonBackIcon'
+import NavigationButtonBackIncon from '../../Icons/NavigationButtonInputIcon'
 import NavigationButtonMapIncon from '../../Icons/NavigationButtonMapIcon'
 import NavigationButton from './NavigationButton'
 

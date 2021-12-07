@@ -10,10 +10,12 @@ import YourLocationInput from '../../components/YourLocationInput/YourLocationIn
 import InputPageButton from '../../components/InputPageButton/InputPageButton'
 import NavigationButton from '../../components/NavigationButton/NavigationButton'
 import NavigationButtonMapIcon from '../../Icons/NavigationButtonMapIcon'
-import NavigationButtonBackIcon from '../../Icons/NavigationButtonBackIcon'
 import * as turf from '@turf/turf'
 import NavigationButtonMoreIcon from '../../Icons/NavigationButtonMoreIcon'
 import { useNavigate } from 'react-router'
+import ClearAllButton from '../../components/ClearAllButton/ClearAllButton'
+import DeletX from '../../Icons/DeleteX'
+import NavigationButtonInputIcon from '../../Icons/NavigationButtonInputIcon'
 
 if (typeof import.meta.env.VITE_MAPBOX_ACCESSKEY === 'string') {
   mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESSKEY
@@ -24,7 +26,7 @@ if (typeof import.meta.env.VITE_MAPBOX_ACCESSKEY === 'string') {
 export default function MapBox(): JSX.Element {
   const mapContainer = useRef<HTMLDivElement | null>(null)
   const map = useRef<null | Map>(null)
-  const [distance, setDistance] = useState<number>(0)
+  //const [distance, setDistance] = useState<number>(0)
   const [location, setLocation] = useState<GeoJSON.Position | null>(null)
   const [locationName, setLocationName] = useState<string>('')
   const [locationName1, setLocationName1] = useState<string>('')
@@ -92,7 +94,7 @@ export default function MapBox(): JSX.Element {
     const json = await query.json()
     const data = json.routes[0]
 
-    setDistance(data.distance)
+    //setDistance(data.distance)
     const route = data.geometry.coordinates
 
     const geojson: GeoJSON.Feature<GeoJSON.Geometry> = {
@@ -161,7 +163,7 @@ export default function MapBox(): JSX.Element {
           'line-cap': 'round',
         },
         paint: {
-          'line-color': '#2d8f43',
+          'line-color': '#2b5113',
           'line-width': 5,
           'line-opacity': 0.75,
         },
@@ -193,7 +195,7 @@ export default function MapBox(): JSX.Element {
         },
         paint: {
           'circle-radius': 10,
-          'circle-color': '#3887be',
+          'circle-color': '#ceb372',
         },
       })
     }
@@ -223,7 +225,7 @@ export default function MapBox(): JSX.Element {
         },
         paint: {
           'circle-radius': 10,
-          'circle-color': '#f30',
+          'circle-color': '#ceb372',
         },
       })
     }
@@ -242,7 +244,9 @@ export default function MapBox(): JSX.Element {
   }
 
   map.current && midpoint
-    ? new mapboxgl.Marker().setLngLat(midpoint).addTo(map.current)
+    ? new mapboxgl.Marker({ color: '#2b5113' })
+        .setLngLat(midpoint)
+        .addTo(map.current)
     : null
 
   // if locations are set
@@ -299,66 +303,108 @@ export default function MapBox(): JSX.Element {
   return (
     <>
       <InputPage hidden={showMapPage}>
+        <AppName>MidWay</AppName>
         <InputContainer>
-          <h1>See U There</h1>
-
-          <InputPageButton onClick={() => onSet()}>
-            set location
-          </InputPageButton>
-          <LocationInput id="locationInput"></LocationInput>
+          <GeocoderBox>
+            <LocationInput id="locationInput"></LocationInput>
+            <InputPageButton onClick={() => onSet()}>
+              set location
+            </InputPageButton>
+            <ClearAllButton onClick={() => onClear()}>
+              <DeletX />
+            </ClearAllButton>
+          </GeocoderBox>
           <YourLocationInput
             locationName1={locationName1}
             locationName2={locationName2}
           />
-          <InputPageButton onClick={() => onClear()}>
-            clear all locations
-          </InputPageButton>
-          <NavigationButton onClick={() => showMap()}>
-            <NavigationButtonMapIcon />
-          </NavigationButton>
+          <NavigationContainerMap>
+            <NavigationButton onClick={() => showMap()}>
+              <NavigationButtonMapIcon />
+            </NavigationButton>
+          </NavigationContainerMap>
         </InputContainer>
       </InputPage>
       <MapPage hidden={showMapPage}>
-        <span>Drivingdistance: {distance} m</span>
-
         <MapContainer ref={mapContainer} className="map-container" />
-        <NavigationButton onClick={() => showMap()}>
-          <NavigationButtonBackIcon />
-        </NavigationButton>
-        <NavigationButton onClick={switchToMore}>
-          <NavigationButtonMoreIcon />
-        </NavigationButton>
+        <NavigationContainerInput>
+          <NavigationButton onClick={() => showMap()}>
+            <NavigationButtonInputIcon />
+          </NavigationButton>
+
+          <NavigationButton onClick={switchToMore}>
+            <NavigationButtonMoreIcon />
+          </NavigationButton>
+        </NavigationContainerInput>
       </MapPage>
     </>
   )
 }
 
+// inputPage
 const InputPage = styled.div`
   display: ${(props) => (props.hidden ? 'none' : 'block')};
 `
+
+const InputContainer = styled.section`
+  display: grid;
+  gap: 1em;
+  padding: 0 1.7em;
+  margin-top: -2em;
+`
+// inputPage upper Box
+const LocationInput = styled.div`
+  height: 2em;
+  padding: 1em;
+  margin: 0 0 2.2em -2em;
+  grid-area: Query;
+`
+
+const AppName = styled.h1`
+  font-size: 4em;
+  margin-top: 0;
+  font-weight: lighter;
+  text-align: center;
+`
+const GeocoderBox = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 5em;
+  grid-template-rows: 1fr 3em;
+  background-color: var(--color-green-500);
+  border: solid var(--color-gold) 3px;
+  border-radius: 0.7em;
+  grid-template-areas:
+    'Query Query'
+    'SetItem clear';
+  padding-bottom: 1em;
+  box-shadow: var(--box-shadow);
+`
+const NavigationContainerMap = styled.div`
+  position: absolute;
+  display: block;
+  bottom: 0.5em;
+  justify-self: center;
+`
+
+//MapPage
 const MapPage = styled.div`
   display: ${(props) => (props.hidden ? 'block' : 'none')};
   height: 100vh;
-
+  margin-top: -1.9em;
   position: relative;
 `
 
-const InputContainer = styled.div`
-  display: grid;
-  gap: 10px;
-  padding: 20px;
-`
-
 const MapContainer = styled.div`
-  height: 80vh;
-
+  height: 100vh;
   position: relative;
   margin: auto;
   margin-top: 30px;
 `
 
-const LocationInput = styled.span`
-  background-color: #e6e4e4;
-  padding: 10px;
-  border-radius: 0.4em;
+const NavigationContainerInput = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 7em;
+  position: relative;
+  top: -6.5em;
+  right: -1em;
 `

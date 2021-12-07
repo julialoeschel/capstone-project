@@ -15,6 +15,16 @@ export default function InputPageButton({
 }
 
 const Button = styled.button`
-  padding: 0.4em 1em;
-  justify-self: center;
+  display: inline-block;
+  height: 2.5em;
+  padding: 0.5em 1.3em;
+  background-color: var(--color-green-700);
+  color: var(--color-green-100);
+  border: none;
+  border-radius: 0.8em;
+  margin-left: 1.9em;
+  justify-self: start;
+  align-self: center;
+  grid-area: SetItem;
+  box-shadow: var(--box-shadow);
 `
