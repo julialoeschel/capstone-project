@@ -246,17 +246,30 @@ export default function MapBox(): JSX.Element {
     : null
   const middle: number[] = midpoint as number[]
 
-  //get POI of Unterkünfte
+  //get POI / hotels und  Unterkünfte 25 stk im Radius 10km
+  async function getPOI(lat: number, long: number, radius: number) {
+    const response = await fetch(`/api/places/${lat}/${long}/${radius}`)
+    const body = await response.json()
+    const POIs = body.results
+    console.log(POIs)
 
-  async function getPOI(long: number, lat: number, radius: number) {
-    const response = await fetch(`/api/places/${long}/${lat}/${radius}`)
-    const body = await response.text()
-    console.log(body)
+    POIs.map(
+      (POI: { geocodes: { main: { latitude: number; longitude: number } } }) =>
+        map.current
+          ? new mapboxgl.Marker({ color: '#b3ec8f' })
+              .setLngLat([
+                POI.geocodes.main.longitude,
+                POI.geocodes.main.latitude,
+              ])
+              .addTo(map.current)
+          : null
+    )
   }
+
   if (midpoint) {
     const LongCoords = middle[0] as number
     const LatCoords = middle[1] as number
-    getPOI(LongCoords, LatCoords, 10000)
+    getPOI(LatCoords, LongCoords, 10000)
   }
 
   // if locations are set do
