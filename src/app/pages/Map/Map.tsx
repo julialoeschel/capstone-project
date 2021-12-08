@@ -244,6 +244,20 @@ export default function MapBox(): JSX.Element {
         .setLngLat(midpoint)
         .addTo(map.current)
     : null
+  const middle: number[] = midpoint as number[]
+
+  //get POI of Unterkünfte
+
+  async function getPOI(long: number, lat: number, radius: number) {
+    const response = await fetch(`/api/places/${long}/${lat}/${radius}`)
+    const body = await response.text()
+    console.log(body)
+  }
+  if (midpoint) {
+    const LongCoords = middle[0] as number
+    const LatCoords = middle[1] as number
+    getPOI(LongCoords, LatCoords, 10000)
+  }
 
   // if locations are set do
   function onSet() {
@@ -286,7 +300,6 @@ export default function MapBox(): JSX.Element {
     }
   }
 
-  const middle: number[] = midpoint as number[]
   middle ? localStorage.setItem('middleLng', JSON.stringify(middle[0])) : null
   middle ? localStorage.setItem('middleLat', JSON.stringify(middle[1])) : null
   location1 && location2 ? getRoute(location1, location2) : null
