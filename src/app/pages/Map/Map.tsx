@@ -246,9 +246,16 @@ export default function MapBox(): JSX.Element {
     : null
   const middle: number[] = midpoint as number[]
 
-  //get POI / hotels und  Unterkünfte 25 stk im Radius 10km
-  async function getPOI(lat: number, long: number, radius: number) {
-    const response = await fetch(`/api/places/${lat}/${long}/${radius}`)
+  //get POI / hotels und  Unterkünfte 25 stk
+  async function getPOI(
+    lat: number,
+    long: number,
+    radius: number,
+    categorie: number
+  ) {
+    const response = await fetch(
+      `/api/places/${lat}/${long}/${radius}/${categorie}`
+    )
     const body = await response.json()
     const POIs = body.results
     console.log(POIs)
@@ -264,12 +271,41 @@ export default function MapBox(): JSX.Element {
               .addTo(map.current)
           : null
     )
+
+    map.current?.addLayer({
+      id: 'search-radius',
+      source: {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: [] },
+      },
+      type: 'fill',
+      paint: {
+        'fill-color': '#e03030',
+        'fill-opacity': 0.1,
+      },
+    })
+
+    function makeRadius(latitude: number, longitude: number, radius: number) {
+      const point = turf.point([latitude, longitude])
+      const buffered = turf.buffer(point, radius, { units: 'meters' })
+      return buffered
+    }
+
+    const searchRadius = makeRadius(long, lat, radius)
+    const SearchRadiusSource = map.current?.getSource('search-radius')
+
+    if (SearchRadiusSource?.type === 'geojson') {
+      console.log(SearchRadiusSource?.setData(searchRadius))
+      SearchRadiusSource?.setData(searchRadius)
+    }
   }
 
   if (midpoint) {
     const LongCoords = middle[0] as number
     const LatCoords = middle[1] as number
-    getPOI(LatCoords, LongCoords, 10000)
+    getPOI(LatCoords, LongCoords, 40000, 19014)
+    //categories:
+    //Hotels: 19014 / Restaurant: 13065 / Cafes, Coffee, and Tea Houses: 13032 / bar: 13003
   }
 
   // if locations are set do

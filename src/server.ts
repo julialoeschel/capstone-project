@@ -11,8 +11,8 @@ const port = process.env.PORT || 3001
 
 app.use(express.json())
 
-app.get('/api/places/:lat/:long/:radius', async (req, res) => {
-  const { lat, long, radius } = req.params
+app.get('/api/places/:lat/:long/:radius/:categorie', async (req, res) => {
+  const { lat, long, radius, categorie } = req.params
 
   const options = {
     method: 'GET',
@@ -23,7 +23,7 @@ app.get('/api/places/:lat/:long/:radius', async (req, res) => {
   }
 
   const response = await fetch(
-    `https://api.foursquare.com/v3/places/search?ll=${lat}%2C${long}&radius=${radius}&categories=19014&limit=25`,
+    `https://api.foursquare.com/v3/places/search?ll=${lat}%2C${long}&radius=${radius}&categories=${categorie}&limit=25`,
     options
   )
   const places = await response.json()
