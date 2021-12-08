@@ -56,12 +56,6 @@ export default function MapBox(): JSX.Element {
       zoom: 4.5,
     })
 
-    if (map.current) {
-      map.current.on('load', function () {
-        map.current?.resize()
-      })
-    }
-
     //add MapControl
     const mapControl = new mapboxgl.NavigationControl()
     map.current.addControl(mapControl)
@@ -303,54 +297,6 @@ export default function MapBox(): JSX.Element {
   function switchToMore() {
     navigate('/Details')
   }
-  // add PoI and diatance
-  async function GetPOI() {
-    if (location1 && location2) {
-      const query = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/hotel.json?type=poi.hotel?&proximity=${middle[0]},${middle[1]}&access_token=${mapboxgl.accessToken}`,
-        { method: 'GET' }
-      )
-      const json = await query.json()
-      const data = json.features
-      console.log(data)
-
-      data.map((search: { geometry: { coordinates: LngLatLike } }) =>
-        map.current
-          ? new mapboxgl.Marker({ color: 'var(--color-yellow)' })
-              .setLngLat(search.geometry.coordinates)
-              .addTo(map.current)
-          : null
-      )
-    }
-    // Draw the alien search radius on the map
-    if (middle) {
-      map.current?.addLayer({
-        id: 'search-radius',
-        source: {
-          type: 'geojson',
-          data: { type: 'FeatureCollection', features: [] },
-        },
-        type: 'fill',
-        paint: {
-          'fill-color': '#f1659b',
-          'fill-opacity': 0.3,
-        },
-      })
-    }
-
-    function makeRadius(lngLatArray: LngLatLike, RadiusInKm: number) {
-      const point = turf.point(lngLatArray as GeoJSON.Position)
-      const buffered = turf.buffer(point, RadiusInKm, { units: 'kilometers' })
-      return buffered
-    }
-    const searchRadius = midpoint ? makeRadius(midpoint, 10) : null
-    console.log(searchRadius)
-    const searchRaduisget = map.current?.getSource('search-radius')
-    if (searchRaduisget?.type === 'geojson') {
-      searchRaduisget.setData(searchRadius as GeoJSON.Feature)
-    }
-  }
-  GetPOI()
 
   return (
     <>

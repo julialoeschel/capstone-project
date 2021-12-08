@@ -8,6 +8,11 @@ const port = process.env.PORT || 3001
 
 app.use(express.json())
 
+app.get('/api/places/:long/:lat', async (req, res) => {
+  const places = fetch('foursquare')
+  res.send(places)
+})
+
 app.get('/api/hello', (_request, response) => {
   response.json({ message: 'Hello API!' })
 })
