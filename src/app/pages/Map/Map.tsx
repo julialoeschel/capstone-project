@@ -258,7 +258,6 @@ export default function MapBox(): JSX.Element {
     )
     const body = await response.json()
     const POIs = body.results
-    console.log(POIs)
 
     POIs.map(
       (POI: { geocodes: { main: { latitude: number; longitude: number } } }) =>
