@@ -56,12 +56,6 @@ export default function MapBox(): JSX.Element {
       zoom: 4.5,
     })
 
-    if (map.current) {
-      map.current.on('load', function () {
-        map.current?.resize()
-      })
-    }
-
     //add MapControl
     const mapControl = new mapboxgl.NavigationControl()
     map.current.addControl(mapControl)
@@ -69,6 +63,7 @@ export default function MapBox(): JSX.Element {
     //initiallize Geocoder and set to Div
     const geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
+      placeholder: '         find location',
     })
     geocoder.addTo('#locationInput')
 
@@ -243,13 +238,76 @@ export default function MapBox(): JSX.Element {
       .coordinates as LngLatLike
   }
 
+  //set marker
   map.current && midpoint
     ? new mapboxgl.Marker({ color: '#2b5113' })
         .setLngLat(midpoint)
         .addTo(map.current)
     : null
+  const middle: number[] = midpoint as number[]
 
-  // if locations are set
+  //get POI / hotels und  Unterkünfte 25 stk
+  async function getPOI(
+    lat: number,
+    long: number,
+    radius: number,
+    categorie: number
+  ) {
+    const response = await fetch(
+      `/api/places/${lat}/${long}/${radius}/${categorie}`
+    )
+    const body = await response.json()
+    const POIs = body.results
+
+    POIs.map(
+      (POI: { geocodes: { main: { latitude: number; longitude: number } } }) =>
+        map.current
+          ? new mapboxgl.Marker({ color: '#b3ec8f' })
+              .setLngLat([
+                POI.geocodes.main.longitude,
+                POI.geocodes.main.latitude,
+              ])
+              .addTo(map.current)
+          : null
+    )
+
+    map.current?.addLayer({
+      id: 'search-radius',
+      source: {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: [] },
+      },
+      type: 'fill',
+      paint: {
+        'fill-color': '#e03030',
+        'fill-opacity': 0.1,
+      },
+    })
+
+    function makeRadius(latitude: number, longitude: number, radius: number) {
+      const point = turf.point([latitude, longitude])
+      const buffered = turf.buffer(point, radius, { units: 'meters' })
+      return buffered
+    }
+
+    const searchRadius = makeRadius(long, lat, radius)
+    const SearchRadiusSource = map.current?.getSource('search-radius')
+
+    if (SearchRadiusSource?.type === 'geojson') {
+      console.log(SearchRadiusSource?.setData(searchRadius))
+      SearchRadiusSource?.setData(searchRadius)
+    }
+  }
+
+  if (midpoint) {
+    const LongCoords = middle[0] as number
+    const LatCoords = middle[1] as number
+    getPOI(LatCoords, LongCoords, 40000, 19014)
+    //categories:
+    //Hotels: 19014 / Restaurant: 13065 / Cafes, Coffee, and Tea Houses: 13032 / bar: 13003
+  }
+
+  // if locations are set do
   function onSet() {
     if (!location1) {
       setLocation1(location)
@@ -289,13 +347,14 @@ export default function MapBox(): JSX.Element {
       alert('please set both inputs')
     }
   }
-  const middle: number[] = midpoint as number[]
+
   middle ? localStorage.setItem('middleLng', JSON.stringify(middle[0])) : null
   middle ? localStorage.setItem('middleLat', JSON.stringify(middle[1])) : null
   location1 && location2 ? getRoute(location1, location2) : null
 
   const navigate = useNavigate()
 
+  //navigate to Deatils page
   function switchToMore() {
     navigate('/Details')
   }
