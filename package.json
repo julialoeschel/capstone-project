@@ -50,7 +50,6 @@
     "@mapbox/mapbox-gl-directions": "^4.1.0",
     "@mapbox/mapbox-gl-geocoder": "^4.7.4",
     "@turf/turf": "^6.5.0",
-    "api": "^4.1.1",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "mapbox-gl": "^2.6.1",
