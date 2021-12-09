@@ -15,7 +15,7 @@ export default function Details(): JSX.Element {
   localStorage.setItem('CominFromDetailsPage', 'true')
 
   function getRadius(x: number) {
-    console.log('Search Radius in meters', x)
+    console.log('Search radius in meters', x)
   }
 
   return (

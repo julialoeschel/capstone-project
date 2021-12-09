@@ -15,12 +15,12 @@ export default function InRadius({ getRadius }: InRadiusProps): JSX.Element {
       <RadiusText>
         Search Radius{' '}
         <RadiusInput
-          type="number"
+          type="range"
           min="0"
           max="50"
           onChange={(event) => setRadius(parseInt(event.target.value) * 1000)}
         />{' '}
-        km
+        {radius / 1000} km
       </RadiusText>
     </>
   )
@@ -29,10 +29,9 @@ export default function InRadius({ getRadius }: InRadiusProps): JSX.Element {
 const RadiusText = styled.label`
   font-weight: lighter;
   padding: 0 0.5em;
-  width: 10em;
   margin-top: 0.5em;
 `
 
 const RadiusInput = styled.input`
-  width: 80%;
+  width: 100%;
 `
