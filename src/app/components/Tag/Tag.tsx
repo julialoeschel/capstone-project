@@ -8,7 +8,7 @@ type TagProps = {
 export default function Tag({ children }: TagProps): JSX.Element {
   return (
     <>
-      <Tags>{children}</Tags>
+      <Tags onClick={() => console.log({ children })}>{children}</Tags>
     </>
   )
 }
@@ -18,5 +18,6 @@ const Tags = styled.span`
   padding: 0.3em 1em;
   border: solid 3px var(--color-green-700);
   border-radius: 1.2em;
-  margin: 0.3em;
+  margin: 0.1em;
+  font-size: 0.9em;
 `
