@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import type { ReactNode } from 'react'
 import styled from 'styled-components'
 
@@ -6,9 +6,13 @@ type TagProps = {
   children: ReactNode
 }
 export default function Tag({ children }: TagProps): JSX.Element {
+  const [search, setSearch] = useState('')
+
+  console.log(search)
+
   return (
     <>
-      <Tags onClick={() => console.log({ children })}>{children}</Tags>
+      <Tags onClick={() => setSearch(children)}>{children}</Tags>
     </>
   )
 }
