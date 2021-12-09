@@ -6,6 +6,7 @@ export default function SearchTags(): JSX.Element {
   return (
     <>
       <SearchTagContainer>
+        <SearchTagText>what are you looking for?</SearchTagText>
         <Tag>Hotel</Tag>
         <Tag>Restaurant</Tag>
         <Tag>Cafe</Tag>
@@ -15,4 +16,10 @@ export default function SearchTags(): JSX.Element {
   )
 }
 
-const SearchTagContainer = styled.section``
+const SearchTagContainer = styled.section`
+  margin-bottom: 0.5em;
+`
+
+const SearchTagText = styled.h2`
+  font-weight: lighter;
+`
