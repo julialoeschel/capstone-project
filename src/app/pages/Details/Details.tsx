@@ -25,8 +25,8 @@ export default function Details(): JSX.Element {
         <BoxHeading>meet you here</BoxHeading>
         <Location>
           {' '}
-          Lng: {parseFloat(middleLng).toFixed(4)} / Lat:{' '}
-          {parseFloat(middleLat).toFixed(4)}
+          Lat: {parseFloat(middleLat).toFixed(4)} / Lng:{' '}
+          {parseFloat(middleLng).toFixed(4)}
         </Location>
       </PlaceContainer>
       <NavigationContainerMap>
