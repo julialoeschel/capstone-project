@@ -15,12 +15,12 @@ export default function Details(): JSX.Element {
 
   localStorage.setItem('CominFromDetailsPage', 'true')
 
-  function getRadius(x: number) {
-    console.log('Search radius in meters', x)
+  function getRadius(radius: number) {
+    localStorage.setItem('Radius', radius.toString())
   }
 
-  function getTag(x: string) {
-    console.log(x, 'Details Page')
+  function getTag(search: string) {
+    localStorage.setItem('ActiveSearchTag', search)
   }
 
   return (
