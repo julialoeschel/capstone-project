@@ -5,23 +5,20 @@ import styled from 'styled-components'
 type TagProps = {
   children: ReactNode
   active: boolean
-  getSearch: (search: string) => void
 }
-export default function Tag({ children, getSearch }: TagProps): JSX.Element {
-  const [search, setSearch] = useState('')
+export default function Tag({ children }: TagProps): JSX.Element {
   const [btnClicked, setBtnClicked] = useState<boolean>(false)
 
   function whatIsClicked() {
     if (children === 'Hotel') {
-      setSearch('Hotel')
+      localStorage.setItem('ActiveSearchTag', '19014')
     } else if (children === 'Restaurant') {
-      setSearch('Restaurant')
+      localStorage.setItem('ActiveSearchTag', '13065')
     } else if (children === 'Cafe') {
-      setSearch('Cafe')
+      localStorage.setItem('ActiveSearchTag', '13032')
     } else if (children === 'Bar') {
-      setSearch('Bar')
+      localStorage.setItem('ActiveSearchTag', '13003')
     }
-    getSearch(search)
   }
 
   return (

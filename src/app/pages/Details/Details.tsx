@@ -19,10 +19,6 @@ export default function Details(): JSX.Element {
     localStorage.setItem('Radius', radius.toString())
   }
 
-  function getTag(search: string) {
-    localStorage.setItem('ActiveSearchTag', search)
-  }
-
   return (
     <Page>
       <AppName>MidWay</AppName>
@@ -38,7 +34,7 @@ export default function Details(): JSX.Element {
           Lat: {parseFloat(middleLat).toFixed(4)} / Lng:{' '}
           {parseFloat(middleLng).toFixed(4)}
         </Location>
-        <SearchTags getTag={getTag} />
+        <SearchTags />
         <InRadius getRadius={getRadius} />
       </PlaceContainer>
       <NavigationContainerMap>
