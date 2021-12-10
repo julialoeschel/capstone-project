@@ -16,6 +16,7 @@ export default function InRadius({ getRadius }: InRadiusProps): JSX.Element {
         Search Radius{' '}
         <RadiusInput
           type="range"
+          defaultValue="0"
           min="0"
           max="50"
           onChange={(event) => setRadius(parseInt(event.target.value) * 1000)}
