@@ -2,15 +2,32 @@ import React from 'react'
 import styled from 'styled-components'
 import Tag from '../Tag/Tag'
 
-export default function SearchTags(): JSX.Element {
+type SearchTagsProps = {
+  getTag: (x: string) => void
+}
+
+export default function SearchTags({ getTag }: SearchTagsProps): JSX.Element {
+  function getSearch(search: string) {
+    getTag(search)
+    return search
+  }
+
   return (
     <>
       <SearchTagContainer>
         <SearchTagText>what are you looking for?</SearchTagText>
-        <Tag active={false}>Hotel</Tag>
-        <Tag active={false}>Restaurant</Tag>
-        <Tag active={false}>Cafe</Tag>
-        <Tag active={false}>Bar</Tag>
+        <Tag active={false} getSearch={getSearch}>
+          Hotel
+        </Tag>
+        <Tag active={false} getSearch={getSearch}>
+          Restaurant
+        </Tag>
+        <Tag active={false} getSearch={getSearch}>
+          Cafe
+        </Tag>
+        <Tag active={false} getSearch={getSearch}>
+          Bar
+        </Tag>
       </SearchTagContainer>
     </>
   )

@@ -19,6 +19,10 @@ export default function Details(): JSX.Element {
     console.log('Search radius in meters', x)
   }
 
+  function getTag(x: string) {
+    console.log(x, 'Details Page')
+  }
+
   return (
     <Page>
       <AppName>MidWay</AppName>
@@ -34,7 +38,7 @@ export default function Details(): JSX.Element {
           Lat: {parseFloat(middleLat).toFixed(4)} / Lng:{' '}
           {parseFloat(middleLng).toFixed(4)}
         </Location>
-        <SearchTags />
+        <SearchTags getTag={getTag} />
         <InRadius getRadius={getRadius} />
       </PlaceContainer>
       <NavigationContainerMap>

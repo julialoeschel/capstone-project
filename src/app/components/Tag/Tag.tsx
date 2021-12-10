@@ -5,8 +5,9 @@ import styled from 'styled-components'
 type TagProps = {
   children: ReactNode
   active: boolean
+  getSearch: (search: string) => void
 }
-export default function Tag({ children }: TagProps): JSX.Element {
+export default function Tag({ children, getSearch }: TagProps): JSX.Element {
   const [search, setSearch] = useState('')
   const [btnClicked, setBtnClicked] = useState<boolean>(false)
 
@@ -20,7 +21,7 @@ export default function Tag({ children }: TagProps): JSX.Element {
     } else if (children === 'Bar') {
       setSearch('Bar')
     }
-    console.log(search)
+    getSearch(search)
   }
 
   return (
