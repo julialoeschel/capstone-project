@@ -7,10 +7,10 @@ export default function SearchTags(): JSX.Element {
     <>
       <SearchTagContainer>
         <SearchTagText>what are you looking for?</SearchTagText>
-        <Tag>Hotel</Tag>
-        <Tag>Restaurant</Tag>
-        <Tag>Cafe</Tag>
-        <Tag>Bar</Tag>
+        <Tag active={false}>Hotel</Tag>
+        <Tag active={false}>Restaurant</Tag>
+        <Tag active={false}>Cafe</Tag>
+        <Tag active={false}>Bar</Tag>
       </SearchTagContainer>
     </>
   )
