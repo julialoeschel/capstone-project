@@ -242,6 +242,7 @@ export default function MapBox(): JSX.Element {
   map.current && midpoint
     ? new mapboxgl.Marker({ color: '#2b5113' })
         .setLngLat(midpoint)
+        .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(`<p>Center</p>`))
         .addTo(map.current)
     : null
   const middle: number[] = midpoint as number[]
@@ -261,14 +262,11 @@ export default function MapBox(): JSX.Element {
     console.log(POIs)
 
     //Map POIs
-    //
-    //
-    //
-    //
     POIs.map(
       (POI: {
         geocodes: { main: { latitude: number; longitude: number } }
         name: string
+        categories: [{ name: string }]
       }) =>
         map.current
           ? new mapboxgl.Marker({ color: '#b3ec8f' })
@@ -279,7 +277,8 @@ export default function MapBox(): JSX.Element {
               .setPopup(
                 new mapboxgl.Popup({ offset: 25 }).setHTML(
                   `
-                  <p>${POI.name}</p>`
+                  <p>${POI.name}</p><br/>
+                  <p>Type: ${POI.categories.map((type) => type.name)}</p>`
                 )
               )
               .addTo(map.current)
