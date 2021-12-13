@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router'
 import styled from 'styled-components'
 import InRadius from '../../components/InRadius/InRadius'
 import NavigationButton from '../../components/NavigationButton/NavigationButton'
+import SearchTags from '../../components/SearchTags/SearchTags'
 import NavigationButtonMapIcon from '../../Icons/NavigationButtonMapIcon'
 
 export default function Details(): JSX.Element {
@@ -14,8 +15,8 @@ export default function Details(): JSX.Element {
 
   localStorage.setItem('CominFromDetailsPage', 'true')
 
-  function getRadius(x: number) {
-    console.log('Search radius in meters', x)
+  function getRadius(radius: number) {
+    localStorage.setItem('Radius', radius.toString())
   }
 
   return (
@@ -33,6 +34,7 @@ export default function Details(): JSX.Element {
           Lat: {parseFloat(middleLat).toFixed(4)} / Lng:{' '}
           {parseFloat(middleLng).toFixed(4)}
         </Location>
+        <SearchTags />
         <InRadius getRadius={getRadius} />
       </PlaceContainer>
       <NavigationContainerMap>

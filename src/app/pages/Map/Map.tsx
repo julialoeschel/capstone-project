@@ -294,17 +294,17 @@ export default function MapBox(): JSX.Element {
     const SearchRadiusSource = map.current?.getSource('search-radius')
 
     if (SearchRadiusSource?.type === 'geojson') {
-      console.log(SearchRadiusSource?.setData(searchRadius))
       SearchRadiusSource?.setData(searchRadius)
     }
   }
 
+  const radius = parseInt(localStorage.getItem('Radius') as string)
+  const categorie = parseInt(localStorage.getItem('ActiveSearchTag') as string)
+
   if (midpoint) {
     const LongCoords = middle[0] as number
     const LatCoords = middle[1] as number
-    getPOI(LatCoords, LongCoords, 40000, 19014)
-    //categories:
-    //Hotels: 19014 / Restaurant: 13065 / Cafes, Coffee, and Tea Houses: 13032 / bar: 13003
+    getPOI(LatCoords, LongCoords, radius, categorie)
   }
 
   // if locations are set do
