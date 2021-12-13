@@ -258,19 +258,30 @@ export default function MapBox(): JSX.Element {
     )
     const body = await response.json()
     const POIs = body.results
+    console.log(POIs)
 
+    //Map POIs
     POIs.map(
-      (POI: { geocodes: { main: { latitude: number; longitude: number } } }) =>
+      (POI: {
+        geocodes: { main: { latitude: number; longitude: number } }
+        name: string
+      }) =>
         map.current
           ? new mapboxgl.Marker({ color: '#b3ec8f' })
               .setLngLat([
                 POI.geocodes.main.longitude,
                 POI.geocodes.main.latitude,
               ])
+              .setPopup(
+                new mapboxgl.Popup({ offset: 25 }).setHTML(
+                  `<h3>${POI.name}</h3>`
+                )
+              )
               .addTo(map.current)
           : null
     )
 
+    //searchRadius Layer
     map.current?.addLayer({
       id: 'search-radius',
       source: {
@@ -386,6 +397,7 @@ export default function MapBox(): JSX.Element {
       </InputPage>
       <MapPage hidden={showMapPage}>
         <MapContainer ref={mapContainer} className="map-container" />
+        <div id="map-popups"></div>
         <NavigationContainerInput>
           <NavigationButton onClick={() => showMap()}>
             <NavigationButtonInputIcon />
