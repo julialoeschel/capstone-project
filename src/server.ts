@@ -27,7 +27,6 @@ app.get('/api/places/:lat/:long/:radius/:categorie', async (req, res) => {
     options
   )
   const places = await response.json()
-  console.log('places', places)
   res.send(places)
 })
 
