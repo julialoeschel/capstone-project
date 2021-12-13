@@ -31,6 +31,22 @@ code {
     monospace;
 
 }
+
+.mapboxgl-popup {
+  max-width: 200px;
+  
+}
+.mapboxgl-popup-content {
+  text-align: center;
+  font-family: monospace, Menlo, Monaco, Consolas, 'Courier New',
+    monospace
+  font-weight: lighter;
+  background-color: var(--color-green-100);
+  border: solid 3px var(--color-gold);
+  border-radius: 1em;
+  
+}
+
     `
 
 export default GlobalStyles

@@ -261,6 +261,10 @@ export default function MapBox(): JSX.Element {
     console.log(POIs)
 
     //Map POIs
+    //
+    //
+    //
+    //
     POIs.map(
       (POI: {
         geocodes: { main: { latitude: number; longitude: number } }
@@ -274,7 +278,8 @@ export default function MapBox(): JSX.Element {
               ])
               .setPopup(
                 new mapboxgl.Popup({ offset: 25 }).setHTML(
-                  `<h3>${POI.name}</h3>`
+                  `
+                  <p>${POI.name}</p>`
                 )
               )
               .addTo(map.current)
@@ -478,4 +483,10 @@ const NavigationContainerInput = styled.div`
   position: relative;
   top: -6.5em;
   right: -1em;
+`
+
+const Popup = styled.div`
+  & .mapboxgl-popup {
+    max-width: 200px;
+  }
 `
