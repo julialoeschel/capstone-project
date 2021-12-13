@@ -10,18 +10,15 @@ export default function Tag({ children }: TagProps): JSX.Element {
   const [btnClicked, setBtnClicked] = useState<boolean>(false)
 
   function handleClick() {
+    setBtnClicked(!btnClicked)
     if (children === 'Hotel') {
       localStorage.setItem('ActiveSearchTag', '19014')
-      setBtnClicked(!btnClicked)
     } else if (children === 'Restaurant') {
       localStorage.setItem('ActiveSearchTag', '13065')
-      setBtnClicked(!btnClicked)
     } else if (children === 'Cafe') {
       localStorage.setItem('ActiveSearchTag', '13032')
-      setBtnClicked(!btnClicked)
     } else if (children === 'Bar') {
       localStorage.setItem('ActiveSearchTag', '13003')
-      setBtnClicked(!btnClicked)
     }
   }
 

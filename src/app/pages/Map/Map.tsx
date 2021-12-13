@@ -300,7 +300,6 @@ export default function MapBox(): JSX.Element {
 
   const radius = parseInt(localStorage.getItem('Radius') as string)
   const categorie = parseInt(localStorage.getItem('ActiveSearchTag') as string)
-  console.log(categorie, radius)
 
   if (midpoint) {
     const LongCoords = middle[0] as number
