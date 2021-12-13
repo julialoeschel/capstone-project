@@ -34,9 +34,10 @@ code {
 
 .mapboxgl-popup {
   max-width: 200px;
+
   
 }
-.mapboxgl-popup-content {
+ .mapboxgl-popup-content {
   text-align: center;
   font-family: monospace, Menlo, Monaco, Consolas, 'Courier New',
     monospace
@@ -44,8 +45,24 @@ code {
   background-color: var(--color-green-100);
   border: solid 3px var(--color-gold);
   border-radius: 1em;
- 
+  padding: 1em;
   
+} 
+
+.mapboxgl-popup-content h3 {
+  padding: 0; 
+  margin: 0;
+
+}
+.mapboxgl-popup-content p {
+  padding: 0; 
+  margin: 0;
+  
+}
+
+
+.mapboxgl-popup-close-button {
+  display: none;
 }
 
     `

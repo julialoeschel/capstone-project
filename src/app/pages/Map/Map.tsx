@@ -277,7 +277,7 @@ export default function MapBox(): JSX.Element {
               .setPopup(
                 new mapboxgl.Popup({ offset: 25 }).setHTML(
                   `
-                  <p>${POI.name}</p><br/>
+                  <h3>${POI.name}</h3><br/>
                   <p>Type: ${POI.categories.map((type) => type.name)}</p>`
                 )
               )
