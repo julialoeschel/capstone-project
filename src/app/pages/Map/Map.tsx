@@ -299,8 +299,16 @@ export default function MapBox(): JSX.Element {
     })
 
     function makeRadius(latitude: number, longitude: number, radius: number) {
+      let Buffer
+      if (radius < 5000) Buffer = 100
+      else if (radius < 1500) Buffer = 1000
+      else Buffer = 4000
+
+      const radiusBuffer = radius + Buffer
+
+      console.log(radiusBuffer)
       const point = turf.point([latitude, longitude])
-      const buffered = turf.buffer(point, radius, { units: 'meters' })
+      const buffered = turf.buffer(point, radiusBuffer, { units: 'meters' })
       return buffered
     }
 
