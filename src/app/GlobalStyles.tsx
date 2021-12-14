@@ -60,11 +60,14 @@ code {
 }
 
 
-
-.mapboxgl-ctrl-geocoder--icon{
+.mapboxgl-ctrl-geocoder--icon-search{
   margin-top: -0.3em;
   margin-left: 15em;
+}
 
+.mapboxgl-ctrl-geocoder--icon-close{
+  margin-top: 0;
+  margin-right: 2.7em;
 }
 
 `
