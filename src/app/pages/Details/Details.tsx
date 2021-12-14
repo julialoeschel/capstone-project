@@ -29,11 +29,11 @@ export default function Details(): JSX.Element {
       </MyLocationsContainer>
       <PlaceContainer>
         <BoxHeading>meet you here</BoxHeading>
-        <Location>
+        <Middle>
           {' '}
           Lat: {parseFloat(middleLat).toFixed(4)} / Lng:{' '}
           {parseFloat(middleLng).toFixed(4)}
-        </Location>
+        </Middle>
         <SearchTags />
         <InRadius getRadius={getRadius} />
       </PlaceContainer>
@@ -84,6 +84,17 @@ const Location = styled.dl`
   margin: 0.3em;
   box-shadow: var(--box-shadow);
 `
+const Middle = styled.dl`
+  padding: 0.4em;
+  min-height: 2em;
+  text-align: center;
+  border: solid 3px var(--color-gold);
+  background-color: var(--color-green-100);
+  border-radius: 0.4em;
+  margin: 0.3em;
+  box-shadow: var(--box-shadow);
+`
+
 //Middle Place
 const PlaceContainer = styled.section`
   display: grid;

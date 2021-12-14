@@ -18,6 +18,9 @@ export default function SearchTags(): JSX.Element {
 
 const SearchTagContainer = styled.section`
   margin-bottom: 0.5em;
+  overflow: auto;
+  white-space: nowrap;
+  height: 6.3em;
 `
 
 const SearchTagText = styled.h2`

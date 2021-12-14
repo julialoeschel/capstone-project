@@ -482,9 +482,3 @@ const NavigationContainerInput = styled.div`
   top: -6.5em;
   right: -1em;
 `
-
-const Popup = styled.div`
-  & .mapboxgl-popup {
-    max-width: 200px;
-  }
-`
