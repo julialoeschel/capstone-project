@@ -29,14 +29,12 @@ const GlobalStyles = createGlobalStyle`
 code {
   font-family: monospace, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
-
 }
 
 .mapboxgl-popup {
   max-width: 200px;
-
-  
 }
+
  .mapboxgl-popup-content {
   text-align: center;
   font-family: monospace, Menlo, Monaco, Consolas, 'Courier New',
@@ -46,25 +44,29 @@ code {
   border: solid 3px var(--color-gold);
   border-radius: 1em;
   padding: 1em;
-  
 } 
 
 .mapboxgl-popup-content h3 {
   padding: 0; 
   margin: 0;
-
 }
 .mapboxgl-popup-content p {
   padding: 0; 
   margin: 0;
-  
 }
-
 
 .mapboxgl-popup-close-button {
   display: none;
 }
 
-    `
+
+
+.mapboxgl-ctrl-geocoder--icon{
+  margin-top: -0.3em;
+  margin-left: 15em;
+
+}
+
+`
 
 export default GlobalStyles

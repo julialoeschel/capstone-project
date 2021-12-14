@@ -63,7 +63,7 @@ export default function MapBox(): JSX.Element {
     //initiallize Geocoder and set to Div
     const geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
-      placeholder: '         find location',
+      placeholder: 'find location',
     })
     geocoder.addTo('#locationInput')
 
