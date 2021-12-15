@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router'
 import ClearAllButton from '../../components/ClearAllButton/ClearAllButton'
 import DeletX from '../../Icons/DeleteX'
 import NavigationButtonInputIcon from '../../Icons/NavigationButtonInputIcon'
+import { builtinModules } from 'module'
 
 if (typeof import.meta.env.VITE_MAPBOX_ACCESSKEY === 'string') {
   mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESSKEY
@@ -191,6 +192,7 @@ export default function MapBox(): JSX.Element {
         paint: {
           'circle-radius': 10,
           'circle-color': '#ceb372',
+          'circle-blur': 0.5,
         },
       })
     }
@@ -221,6 +223,7 @@ export default function MapBox(): JSX.Element {
         paint: {
           'circle-radius': 10,
           'circle-color': '#ceb372',
+          'circle-blur': 0.5,
         },
       })
     }
