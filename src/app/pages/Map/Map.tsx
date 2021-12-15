@@ -268,7 +268,7 @@ export default function MapBox(): JSX.Element {
         categories: [{ name: string }]
       }) =>
         map.current
-          ? new mapboxgl.Marker({ color: '#b3ec8f' })
+          ? new mapboxgl.Marker({ color: 'var(--color-gold)', scale: 0.7 })
               .setLngLat([
                 POI.geocodes.main.longitude,
                 POI.geocodes.main.latitude,
