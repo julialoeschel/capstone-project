@@ -63,7 +63,7 @@ export default function MapBox(): JSX.Element {
     //initiallize Geocoder and set to Div
     const geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
-      placeholder: '         find location',
+      placeholder: 'find location',
     })
     geocoder.addTo('#locationInput')
 
@@ -299,8 +299,16 @@ export default function MapBox(): JSX.Element {
     })
 
     function makeRadius(latitude: number, longitude: number, radius: number) {
+      let Buffer
+      if (radius < 5000) Buffer = 100
+      else if (radius < 1500) Buffer = 1000
+      else Buffer = 4000
+
+      const radiusBuffer = radius + Buffer
+
+      console.log(radiusBuffer)
       const point = turf.point([latitude, longitude])
-      const buffered = turf.buffer(point, radius, { units: 'meters' })
+      const buffered = turf.buffer(point, radiusBuffer, { units: 'meters' })
       return buffered
     }
 
@@ -481,10 +489,4 @@ const NavigationContainerInput = styled.div`
   position: relative;
   top: -6.5em;
   right: -1em;
-`
-
-const Popup = styled.div`
-  & .mapboxgl-popup {
-    max-width: 200px;
-  }
 `
