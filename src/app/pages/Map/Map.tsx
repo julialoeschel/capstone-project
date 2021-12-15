@@ -16,7 +16,6 @@ import { useNavigate } from 'react-router'
 import ClearAllButton from '../../components/ClearAllButton/ClearAllButton'
 import DeletX from '../../Icons/DeleteX'
 import NavigationButtonInputIcon from '../../Icons/NavigationButtonInputIcon'
-import { builtinModules } from 'module'
 
 if (typeof import.meta.env.VITE_MAPBOX_ACCESSKEY === 'string') {
   mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESSKEY
@@ -484,10 +483,4 @@ const NavigationContainerInput = styled.div`
   position: relative;
   top: -6.5em;
   right: -1em;
-`
-
-const Popup = styled.div`
-  & .mapboxgl-popup {
-    max-width: 200px;
-  }
 `
