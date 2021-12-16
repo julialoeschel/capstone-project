@@ -27,7 +27,9 @@ export default function SearchTags(): JSX.Element {
       : null
   }
 
-  function handleTheClick(id: string) {
+
+  function handleClick(id: string) {
+
     if (id === 'Hotel' && tagState[0].active === false) {
       localStorage.setItem('ActiveSearchTag', '19014')
       setTagState([
@@ -80,7 +82,7 @@ export default function SearchTags(): JSX.Element {
       <SearchTagContainer>
         <SearchTagText>what are you looking for?</SearchTagText>
         {tagState.map((state) => (
-          <Tags onClick={() => handleTheClick(state.id)} active={state.active}>
+          <Tags onClick={() => handleClick(state.id)} active={state.active}>
             {state.name}
           </Tags>
         ))}
