@@ -12,19 +12,26 @@ export default function SearchTags(): JSX.Element {
     { id: 'Bar', name: 'Bar', active: false },
   ])
 
+  if (localStorage.getItem('ActiveSearchTag') != '') {
+    localStorage.getItem('ActiveSearchTag') === '19014'
+      ? (tagState[0].active = true)
+      : null
+    localStorage.getItem('ActiveSearchTag') === '13065'
+      ? (tagState[1].active = true)
+      : null
+    localStorage.getItem('ActiveSearchTag') === '13032'
+      ? (tagState[2].active = true)
+      : null
+    localStorage.getItem('ActiveSearchTag') === '13003'
+      ? (tagState[3].active = true)
+      : null
+  }
+
   function handleTheClick(id: string) {
     if (id === 'Hotel' && tagState[0].active === false) {
       localStorage.setItem('ActiveSearchTag', '19014')
       setTagState([
         { id: 'Hotel', name: 'Hotel', active: true },
-        { id: 'Restaurant', name: 'Restaurant', active: false },
-        { id: 'Cafe', name: 'Cafe', active: false },
-        { id: 'Bar', name: 'Bar', active: false },
-      ])
-    } else if (id === 'Hotel' && tagState[0].active === true) {
-      localStorage.setItem('ActiveSearchTag', '')
-      setTagState([
-        { id: 'Hotel', name: 'Hotel', active: false },
         { id: 'Restaurant', name: 'Restaurant', active: false },
         { id: 'Cafe', name: 'Cafe', active: false },
         { id: 'Bar', name: 'Bar', active: false },
@@ -37,28 +44,12 @@ export default function SearchTags(): JSX.Element {
         { id: 'Cafe', name: 'Cafe', active: false },
         { id: 'Bar', name: 'Bar', active: false },
       ])
-    } else if (id === 'Restaurant' && tagState[1].active === true) {
-      localStorage.setItem('ActiveSearchTag', '')
-      setTagState([
-        { id: 'Hotel', name: 'Hotel', active: false },
-        { id: 'Restaurant', name: 'Restaurant', active: false },
-        { id: 'Cafe', name: 'Cafe', active: false },
-        { id: 'Bar', name: 'Bar', active: false },
-      ])
     } else if (id === 'Cafe' && tagState[2].active === false) {
       localStorage.setItem('ActiveSearchTag', '13032')
       setTagState([
         { id: 'Hotel', name: 'Hotel', active: false },
         { id: 'Restaurant', name: 'Restaurant', active: false },
         { id: 'Cafe', name: 'Cafe', active: true },
-        { id: 'Bar', name: 'Bar', active: false },
-      ])
-    } else if (id === 'Cafe' && tagState[2].active === true) {
-      localStorage.setItem('ActiveSearchTag', '')
-      setTagState([
-        { id: 'Hotel', name: 'Hotel', active: false },
-        { id: 'Restaurant', name: 'Restaurant', active: false },
-        { id: 'Cafe', name: 'Cafe', active: false },
         { id: 'Bar', name: 'Bar', active: false },
       ])
     } else if (id === 'Bar' && tagState[3].active === false) {
@@ -69,7 +60,12 @@ export default function SearchTags(): JSX.Element {
         { id: 'Cafe', name: 'Cafe', active: false },
         { id: 'Bar', name: 'Bar', active: true },
       ])
-    } else if (id === 'Bar' && tagState[3].active === true) {
+    } else if (
+      tagState[0].active === true ||
+      tagState[1].active === true ||
+      tagState[2].active === true ||
+      tagState[3].active === true
+    ) {
       localStorage.setItem('ActiveSearchTag', '')
       setTagState([
         { id: 'Hotel', name: 'Hotel', active: false },
