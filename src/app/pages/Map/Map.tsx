@@ -359,6 +359,8 @@ export default function MapBox(): JSX.Element {
       (!showMapPage && !locationName1 && !locationName2)
     ) {
       setShowMapPage(!showMapPage)
+      localStorage.setItem('Radius', '0')
+      localStorage.setItem('ActiveSearchTag', '')
     } else if (showMapPage) {
       setShowMapPage(!showMapPage)
       setLocation1(null)
