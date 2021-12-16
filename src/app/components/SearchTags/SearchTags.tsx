@@ -1,16 +1,61 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
-import Tag from '../Tag/Tag'
+type TagProps = {
+  active: boolean
+}
 
 export default function SearchTags(): JSX.Element {
+  const [tagState, setTagState] = useState([
+    { id: 'Hotel', name: 'Hotel', active: false },
+    { id: 'Restaurant', name: 'Restaurant', active: false },
+    { id: 'Cafe', name: 'Cafe', active: false },
+    { id: 'Bar', name: 'Bar', active: false },
+  ])
+
+  function handleTheClick(id: string) {
+    if (id === 'Hotel') {
+      localStorage.setItem('ActiveSearchTag', '19014')
+      setTagState([
+        { id: 'Hotel', name: 'Hotel', active: true },
+        { id: 'Restaurant', name: 'Restaurant', active: false },
+        { id: 'Cafe', name: 'Cafe', active: false },
+        { id: 'Bar', name: 'Bar', active: false },
+      ])
+    } else if (id === 'Restaurant') {
+      localStorage.setItem('ActiveSearchTag', '13065')
+      setTagState([
+        { id: 'Hotel', name: 'Hotel', active: false },
+        { id: 'Restaurant', name: 'Restaurant', active: true },
+        { id: 'Cafe', name: 'Cafe', active: false },
+        { id: 'Bar', name: 'Bar', active: false },
+      ])
+    } else if (id === 'Cafe') {
+      localStorage.setItem('ActiveSearchTag', '13032')
+      setTagState([
+        { id: 'Hotel', name: 'Hotel', active: false },
+        { id: 'Restaurant', name: 'Restaurant', active: false },
+        { id: 'Cafe', name: 'Cafe', active: true },
+        { id: 'Bar', name: 'Bar', active: false },
+      ])
+    } else if (id === 'Bar') {
+      localStorage.setItem('ActiveSearchTag', '13003')
+      setTagState([
+        { id: 'Hotel', name: 'Hotel', active: false },
+        { id: 'Restaurant', name: 'Restaurant', active: false },
+        { id: 'Cafe', name: 'Cafe', active: false },
+        { id: 'Bar', name: 'Bar', active: true },
+      ])
+    }
+  }
   return (
     <>
       <SearchTagContainer>
         <SearchTagText>what are you looking for?</SearchTagText>
-        <Tag active={false}>Hotel</Tag>
-        <Tag active={false}>Restaurant</Tag>
-        <Tag active={false}>Cafe</Tag>
-        <Tag active={false}>Bar</Tag>
+        {tagState.map((state) => (
+          <Tags onClick={() => handleTheClick(state.id)} active={state.active}>
+            {state.name}
+          </Tags>
+        ))}
       </SearchTagContainer>
     </>
   )
@@ -25,4 +70,16 @@ const SearchTagContainer = styled.section`
 
 const SearchTagText = styled.h2`
   font-weight: lighter;
+`
+const Tags = styled.span<Partial<TagProps>>`
+  background-color: ${(props) =>
+    props.active ? 'var(--color-green-700)' : 'var(  --color-green-100)'};
+  color: ${(props) =>
+    props.active ? 'var(--color-green-100)' : 'var(  --color-green-700)'};
+  font-weight: ${(props) => (props.active ? 'lighter' : 'normal')};
+  padding: 0.3em 1em;
+  border: solid 3px var(--color-green-700);
+  border-radius: 1.2em;
+  margin: 0.1em;
+  font-size: 0.9em;
 `
