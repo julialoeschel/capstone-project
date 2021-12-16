@@ -27,7 +27,9 @@ export default function SearchTags(): JSX.Element {
       : null
   }
 
+
   function handleClick(id: string) {
+
     if (id === 'Hotel' && tagState[0].active === false) {
       localStorage.setItem('ActiveSearchTag', '19014')
       setTagState([
