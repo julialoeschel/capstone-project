@@ -12,6 +12,21 @@ export default function SearchTags(): JSX.Element {
     { id: 'Bar', name: 'Bar', active: false },
   ])
 
+  if (localStorage.getItem('ActiveSearchTag') != '') {
+    localStorage.getItem('ActiveSearchTag') === '19014'
+      ? (tagState[0].active = true)
+      : null
+    localStorage.getItem('ActiveSearchTag') === '13065'
+      ? (tagState[1].active = true)
+      : null
+    localStorage.getItem('ActiveSearchTag') === '13032'
+      ? (tagState[2].active = true)
+      : null
+    localStorage.getItem('ActiveSearchTag') === '13003'
+      ? (tagState[3].active = true)
+      : null
+  }
+
   function handleTheClick(id: string) {
     if (id === 'Hotel' && tagState[0].active === false) {
       localStorage.setItem('ActiveSearchTag', '19014')
