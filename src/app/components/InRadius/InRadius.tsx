@@ -10,21 +10,39 @@ export default function InRadius({ getRadius }: InRadiusProps): JSX.Element {
 
   getRadius(radius)
 
-  return (
-    <>
-      <RadiusText>
-        Search Radius{' '}
-        <RadiusInput
-          type="range"
-          defaultValue="0"
-          min="0"
-          max="50"
-          onChange={(event) => setRadius(parseInt(event.target.value) * 1000)}
-        />{' '}
-        {radius / 1000} km
-      </RadiusText>
-    </>
-  )
+  if (radius != 0) {
+    return (
+      <>
+        <RadiusText>
+          Search Radius{' '}
+          <RadiusInput
+            type="range"
+            defaultValue="localStorage.getItem('Radius')"
+            min="0"
+            max="50"
+            onChange={(event) => setRadius(parseInt(event.target.value) * 1000)}
+          />
+          {radius / 1000} km
+        </RadiusText>{' '}
+      </>
+    )
+  } else {
+    return (
+      <>
+        <RadiusText>
+          Search Radius{' '}
+          <RadiusInput
+            type="range"
+            defaultValue="localStorage.getItem('Radius')"
+            min="0"
+            max="50"
+            onChange={(event) => setRadius(parseInt(event.target.value) * 1000)}
+          />
+          ..km
+        </RadiusText>{' '}
+      </>
+    )
+  }
 }
 
 const RadiusText = styled.label`
