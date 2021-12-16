@@ -6,7 +6,9 @@ type InRadiusProps = {
 }
 
 export default function InRadius({ getRadius }: InRadiusProps): JSX.Element {
-  const [radius, setRadius] = useState(0)
+  const [radius, setRadius] = useState(
+    JSON.parse(localStorage.getItem('Radius') as string)
+  )
 
   getRadius(radius)
 
