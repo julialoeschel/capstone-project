@@ -31,11 +31,12 @@ code {
     monospace;
 }
 
-.mapboxgl-popup {
-  max-width: 200px;
+
+& .mapboxgl-popup {
+  max-width: 100px;
 }
 
- .mapboxgl-popup-content {
+& .mapboxgl-popup-content {
   text-align: center;
   font-family: monospace, Menlo, Monaco, Consolas, 'Courier New',
     monospace
@@ -46,29 +47,19 @@ code {
   padding: 1em;
 } 
 
-.mapboxgl-popup-content h3 {
-  padding: 0; 
-  margin: 0;
-}
-.mapboxgl-popup-content p {
-  padding: 0; 
-  margin: 0;
-}
+& .mapboxgl-popup-content h3 {
+    padding: 0;
+    margin: 0;
+  }
 
-.mapboxgl-popup-close-button {
-  display: none;
-}
+  & .mapboxgl-popup-content p {
+    padding: 0;
+    margin: 0;
+  }
 
-
-.mapboxgl-ctrl-geocoder--icon-search{
-  margin-top: -0.3em;
-  margin-left: 15em;
-}
-
-.mapboxgl-ctrl-geocoder--icon-close{
-  margin-top: 0;
-  margin-right: 2.7em;
-}
+ & .mapboxgl-popup-close-button {
+    display: none;
+  }
 
 `
 
