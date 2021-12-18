@@ -94,6 +94,9 @@ const SearchTagContainer = styled.section`
   overflow: auto;
   white-space: nowrap;
   height: 6.3em;
+  @media only screen and (min-width: 640px) {
+    justify-self: center;
+  }
 `
 
 const SearchTagText = styled.h2`
