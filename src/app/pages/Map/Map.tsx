@@ -56,6 +56,10 @@ export default function MapBox(): JSX.Element {
       zoom: 4.5,
     })
 
+    map.current.once('load', () => {
+      map.current?.resize()
+    })
+
     //add MapControl
     const mapControl = new mapboxgl.NavigationControl()
     map.current.addControl(mapControl)
