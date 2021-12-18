@@ -31,11 +31,12 @@ code {
     monospace;
 }
 
-.mapboxgl-popup {
-  max-width: 200px;
+
+& .mapboxgl-popup {
+  max-width: 100px;
 }
 
- .mapboxgl-popup-content {
+& .mapboxgl-popup-content {
   text-align: center;
   font-family: monospace, Menlo, Monaco, Consolas, 'Courier New',
     monospace
@@ -46,18 +47,19 @@ code {
   padding: 1em;
 } 
 
-.mapboxgl-popup-content h3 {
-  padding: 0; 
-  margin: 0;
-}
-.mapboxgl-popup-content p {
-  padding: 0; 
-  margin: 0;
-}
+& .mapboxgl-popup-content h3 {
+    padding: 0;
+    margin: 0;
+  }
 
-.mapboxgl-popup-close-button {
-  display: none;
-}
+  & .mapboxgl-popup-content p {
+    padding: 0;
+    margin: 0;
+  }
+
+ & .mapboxgl-popup-close-button {
+    display: none;
+  }
 
 `
 
