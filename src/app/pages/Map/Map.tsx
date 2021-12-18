@@ -56,6 +56,10 @@ export default function MapBox(): JSX.Element {
       zoom: 4.5,
     })
 
+    map.current.once('load', () => {
+      map.current?.resize()
+    })
+
     //add MapControl
     const mapControl = new mapboxgl.NavigationControl()
     map.current.addControl(mapControl)
@@ -338,6 +342,8 @@ export default function MapBox(): JSX.Element {
       setLocationName1(locationName)
       localStorage.setItem('Location1', JSON.stringify(locationName))
       localStorage.setItem('Location1Coords', JSON.stringify(location))
+      localStorage.setItem('Radius', '')
+      localStorage.setItem('ActiveSearchTag', '')
     } else if (!location2) {
       setLocation2(location)
       setLocationName2(locationName)
@@ -413,7 +419,8 @@ export default function MapBox(): JSX.Element {
       <MapPage hidden={showMapPage}>
         <MapContainer ref={mapContainer} className="map-container" />
         <div id="map-popups"></div>
-        <NavigationContainerInput>
+
+        <NavigationContainer>
           <NavigationButton onClick={() => showMap()}>
             <NavigationButtonInputIcon />
           </NavigationButton>
@@ -421,7 +428,7 @@ export default function MapBox(): JSX.Element {
           <NavigationButton onClick={switchToMore}>
             <NavigationButtonMoreIcon />
           </NavigationButton>
-        </NavigationContainerInput>
+        </NavigationContainer>
       </MapPage>
     </>
   )
@@ -481,16 +488,16 @@ const MapPage = styled.div`
 `
 
 const MapContainer = styled.div`
-  height: 100vh;
+  height: 100%;
   position: relative;
   margin: auto;
   margin-top: 30px;
 `
 
-const NavigationContainerInput = styled.div`
+const NavigationContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 7em;
   position: relative;
-  top: -6.5em;
+  bottom: 6em;
   right: -1em;
 `
