@@ -454,7 +454,10 @@ const LocationInput = styled.div`
 
   & .mapboxgl-ctrl-geocoder--icon-search {
     margin-top: -0.3em;
-    margin-left: 15em;
+    margin-right: 15em;
+    right: 12px;
+    margin-right: 1em;
+    left: auto;
   }
 
   & .mapboxgl-ctrl-geocoder--icon-close {
