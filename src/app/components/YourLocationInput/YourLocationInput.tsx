@@ -35,6 +35,9 @@ const Container = styled.div`
     'text text'
     '. location1'
     '. location2';
+  @media only screen and (min-width: 640px) {
+    grid-template-columns: 20% 80%;
+  }
 `
 const Location1 = styled.span`
   padding: 10px;
@@ -47,6 +50,9 @@ const Location1 = styled.span`
   border-radius: 0.4em;
   grid-area: location1;
   box-shadow: var(--box-shadow);
+  @media only screen and (min-width: 640px) {
+    justify-self: center;
+  }
 `
 const Location2 = styled.span`
   padding: 10px;
@@ -59,8 +65,14 @@ const Location2 = styled.span`
   border-radius: 0.4em;
   grid-area: location2;
   box-shadow: var(--box-shadow);
+  @media only screen and (min-width: 640px) {
+    justify-self: center;
+  }
 `
 const Text = styled.span`
   grid-area: text;
   font-weight: lighter;
+  @media only screen and (min-width: 640px) {
+    text-align: center;
+  }
 `
