@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router'
 import styled from 'styled-components'
 
 export default function LandingPage(): JSX.Element {
   const navigate = useNavigate()
+  const [showInstruction, setShowInstruction] = useState<boolean>(false)
+
+  function showInstructions() {}
 
   function handleClick() {
     navigate('/MapPage')
@@ -13,6 +16,9 @@ export default function LandingPage(): JSX.Element {
     <>
       <Container>
         <AppName>MidWay</AppName>
+        <InstructionsButton onClick={showInstructions}>
+          show instructions
+        </InstructionsButton>
         <Image src="https://images.unsplash.com/photo-1532154066703-3973764c81fe?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"></Image>
         <LetsGoButton onClick={() => setTimeout(handleClick, 800)}>
           lets Go!
@@ -32,6 +38,18 @@ const AppName = styled.h1`
   top: 0.4em;
   left: 1.5em;
 `
+const InstructionsButton = styled.button`
+  position: absolute;
+  z-index: 21;
+  bottom: 12em;
+  left: 10.5em;
+  border: none;
+  background-color: #d1d0d1;
+  padding: 0.2em 0.4em;
+  font-weight: lighter;
+  border-radius: 0.8em;
+`
+
 const LetsGoButton = styled.button`
   position: absolute;
   bottom: 4em;
