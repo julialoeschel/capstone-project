@@ -21,24 +21,35 @@ export default function LandingPage(): JSX.Element {
 }
 
 const AppName = styled.h1`
+  display: block;
   font-size: 4em;
   margin-top: 0;
   font-weight: lighter;
-  text-align: center;
   margin-bottom: 0.2em;
   position: absolute;
+  top: 0.4em;
+  left: 1.5em;
 `
 const LetsGoButton = styled.button`
-  padding: 2em 4em;
   position: absolute;
-  bottom: 2em;
-  left: 4em;
+  bottom: 4em;
+  left: 5.6em;
+  padding: 1.5em 5em;
+  text-align: center;
+  border: solid 3px var(--color-gold);
+  background-color: var(--color-green-100);
+  border-radius: 0.4em;
+  box-shadow: var(--box-shadow);
+  font-weight: lighter;
+  font-size: 1em;
 `
 const Image = styled.img`
-  opacity: 0.5;
+  opacity: 0.4;
   height: 100vh;
+  width: 100%;
 `
 const Container = styled.div`
   height: 100vh;
   position: relative;
+  z-index: 14;
 `
