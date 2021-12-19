@@ -6,7 +6,9 @@ export default function LandingPage(): JSX.Element {
   const navigate = useNavigate()
   const [showInstruction, setShowInstruction] = useState<boolean>(false)
 
-  function showInstructions() {}
+  function showInstructions() {
+    setShowInstruction(!showInstruction)
+  }
 
   function handleClick() {
     navigate('/MapPage')
@@ -19,7 +21,13 @@ export default function LandingPage(): JSX.Element {
         <InstructionsButton onClick={showInstructions}>
           show instructions
         </InstructionsButton>
-        <Image src="https://images.unsplash.com/photo-1532154066703-3973764c81fe?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"></Image>
+        <InstructionsContainer hidden={showInstruction}>
+          hier sind die instructions
+        </InstructionsContainer>
+        <Image
+          onClick={() => setShowInstruction(false)}
+          src="https://images.unsplash.com/photo-1532154066703-3973764c81fe?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
+        ></Image>
         <LetsGoButton onClick={() => setTimeout(handleClick, 800)}>
           lets Go!
         </LetsGoButton>
@@ -95,4 +103,14 @@ const Container = styled.div`
   height: 100vh;
   position: relative;
   z-index: 14;
+`
+const InstructionsContainer = styled.div`
+  display: ${(props) => (props.hidden ? 'block' : 'none')};
+  position: absolute;
+  background-color: hotpink;
+  z-index: 2;
+  top: 8em;
+  height: 21em;
+  width: 20.5em;
+  left: 2em;
 `
