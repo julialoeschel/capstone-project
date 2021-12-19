@@ -40,7 +40,7 @@ export default function Details(): JSX.Element {
       <NavigationContainerMap>
         <NavigationButton
           onClick={() => {
-            navigate('/')
+            navigate('/MapPage')
           }}
         >
           <NavigationButtonMapIcon />
