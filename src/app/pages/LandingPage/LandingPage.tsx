@@ -14,7 +14,9 @@ export default function LandingPage(): JSX.Element {
       <Container>
         <AppName>MidWay</AppName>
         <Image src="https://images.unsplash.com/photo-1532154066703-3973764c81fe?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"></Image>
-        <LetsGoButton onClick={() => handleClick()}>lets Go!</LetsGoButton>
+        <LetsGoButton onClick={() => setTimeout(handleClick, 800)}>
+          lets Go!
+        </LetsGoButton>
       </Container>
     </>
   )
@@ -43,8 +45,6 @@ const LetsGoButton = styled.button`
   font-weight: lighter;
   font-size: 1em;
 
-  -webkit-transition-duration: 0.4s; /* Safari */
-  transition-duration: 0.4s;
   overflow: hidden;
   cursor: pointer;
 
@@ -55,10 +55,10 @@ const LetsGoButton = styled.button`
     position: absolute;
     padding-top: 300%;
     padding-left: 350%;
-    margin-left: -80px !important;
+    margin-left: -83px !important;
     margin-top: -120%;
     opacity: 0;
-    transition: all 0.8s;
+    transition: all 3s;
   }
 
   &:active:after {
