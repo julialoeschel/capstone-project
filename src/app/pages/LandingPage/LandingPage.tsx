@@ -56,6 +56,7 @@ const InstructionsButton = styled.button`
   padding: 0.2em 0.4em;
   font-weight: lighter;
   border-radius: 0.8em;
+  box-shadow: var(--box-shadow);
 `
 
 const LetsGoButton = styled.button`
@@ -70,7 +71,7 @@ const LetsGoButton = styled.button`
   box-shadow: var(--box-shadow);
   font-weight: lighter;
   font-size: 1em;
-
+  box-shadow: var(--box-shadow);
   overflow: hidden;
   cursor: pointer;
 
@@ -113,4 +114,9 @@ const InstructionsContainer = styled.div`
   height: 21em;
   width: 20.5em;
   left: 2em;
+  border-radius: 3em;
+  border: solid 3px var(--color-gold);
+  background-color: transparent;
+  box-shadow: var(--box-shadow);
+  overflow: hidden;
 `
