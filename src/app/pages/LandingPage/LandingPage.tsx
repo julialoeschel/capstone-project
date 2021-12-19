@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router'
 import styled from 'styled-components'
+import Instructions from '../../components/Instructions/Instructions'
 
 export default function LandingPage(): JSX.Element {
   const navigate = useNavigate()
@@ -22,7 +23,7 @@ export default function LandingPage(): JSX.Element {
           show instructions
         </InstructionsButton>
         <InstructionsContainer hidden={showInstruction}>
-          hier sind die instructions
+          <Instructions></Instructions>
         </InstructionsContainer>
         <Image
           onClick={() => setShowInstruction(false)}
@@ -119,4 +120,5 @@ const InstructionsContainer = styled.div`
   background-color: transparent;
   box-shadow: var(--box-shadow);
   overflow: hidden;
+  padding: 0 2em;
 `
