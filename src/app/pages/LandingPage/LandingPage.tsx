@@ -42,6 +42,31 @@ const LetsGoButton = styled.button`
   box-shadow: var(--box-shadow);
   font-weight: lighter;
   font-size: 1em;
+
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  overflow: hidden;
+  cursor: pointer;
+
+  &:after {
+    content: '';
+    background: var(--color-green-700);
+    display: block;
+    position: absolute;
+    padding-top: 300%;
+    padding-left: 350%;
+    margin-left: -80px !important;
+    margin-top: -120%;
+    opacity: 0;
+    transition: all 0.8s;
+  }
+
+  &:active:after {
+    padding: 0;
+    margin: 0;
+    opacity: 1;
+    transition: 0s;
+  }
 `
 const Image = styled.img`
   opacity: 0.4;
