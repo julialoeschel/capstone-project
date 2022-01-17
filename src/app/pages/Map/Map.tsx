@@ -32,9 +32,13 @@ export default function MapBox(): JSX.Element {
   const [locationName1, setLocationName1] = useState<string>('')
   const [locationName2, setLocationName2] = useState<string>('')
   const [locationName3, setLocationName3] = useState<string>('')
+  const [locationName4, setLocationName4] = useState<string>('')
+  const [locationName5, setLocationName5] = useState<string>('')
   const [location1, setLocation1] = useState<GeoJSON.Position | null>(null)
   const [location2, setLocation2] = useState<GeoJSON.Position | null>(null)
   const [location3, setLocation3] = useState<GeoJSON.Position | null>(null)
+  const [location4, setLocation4] = useState<GeoJSON.Position | null>(null)
+  const [location5, setLocation5] = useState<GeoJSON.Position | null>(null)
   const [showMapPage, setShowMapPage] = useState<boolean>(true)
 
   // initialize map only once
@@ -49,6 +53,12 @@ export default function MapBox(): JSX.Element {
       )
       setLocation3(
         JSON.parse(localStorage.getItem('Location3Coords') as string)
+      )
+      setLocation4(
+        JSON.parse(localStorage.getItem('Location4Coords') as string)
+      )
+      setLocation5(
+        JSON.parse(localStorage.getItem('Location5Coords') as string)
       )
       localStorage.setItem('CominFromDetailsPage', 'false')
     }
@@ -85,8 +95,9 @@ export default function MapBox(): JSX.Element {
   }, [])
 
   // get Distance from API
-  async function getRoute(start: GeoJSON.Position, end: GeoJSON.Position) {
-    const startPointLng = start[0]
+  async function getRoute() {
+    //start: GeoJSON.Position, end: GeoJSON.Position
+    /*    const startPointLng = start[0]
     const startPointLat = start[1]
     const endPointLng = end[0]
     const endPointLat = end[1]
@@ -109,7 +120,7 @@ export default function MapBox(): JSX.Element {
         coordinates: route,
       },
     }
-
+*/
     const pointData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
       type: 'FeatureCollection',
       features: [
@@ -151,6 +162,35 @@ export default function MapBox(): JSX.Element {
         },
       ],
     }
+
+    const fourthData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'Point',
+            coordinates: location4 as GeoJSON.Position,
+          },
+        },
+      ],
+    }
+
+    const fivthData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'Point',
+            coordinates: location5 as GeoJSON.Position,
+          },
+        },
+      ],
+    }
+
     //center map over route
     if (map.current && location1 && location2) {
       map.current.fitBounds(
@@ -252,7 +292,7 @@ export default function MapBox(): JSX.Element {
         },
       })
     }
-    //draw point on location 3 (extra point)
+    //draw point on location 3
     const mapThirdSource = map.current?.getSource('third')
     if (mapThirdSource?.type === 'geojson') {
       mapThirdSource.setData(thirdData)
@@ -283,11 +323,75 @@ export default function MapBox(): JSX.Element {
         },
       })
     }
+
+    //draw point on location 4
+    const mapFourSource = map.current?.getSource('fourth')
+    if (mapFourSource?.type === 'geojson') {
+      mapFourSource.setData(fourthData)
+    } else if (location3) {
+      map.current?.addLayer({
+        id: 'fourth',
+        type: 'circle',
+        source: {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: [
+              {
+                type: 'Feature',
+                properties: {},
+                geometry: {
+                  type: 'Point',
+                  coordinates: location4,
+                },
+              },
+            ],
+          },
+        },
+        paint: {
+          'circle-radius': 10,
+          'circle-color': '#ceb372',
+          'circle-blur': 0.5,
+        },
+      })
+    }
+
+    //draw point on location 5
+    const mapFiveSource = map.current?.getSource('five')
+    if (mapFiveSource?.type === 'geojson') {
+      mapFiveSource.setData(fivthData)
+    } else if (location3) {
+      map.current?.addLayer({
+        id: 'five',
+        type: 'circle',
+        source: {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: [
+              {
+                type: 'Feature',
+                properties: {},
+                geometry: {
+                  type: 'Point',
+                  coordinates: location5,
+                },
+              },
+            ],
+          },
+        },
+        paint: {
+          'circle-radius': 10,
+          'circle-color': '#ceb372',
+          'circle-blur': 0.5,
+        },
+      })
+    }
   }
 
-  // get middle point between location1 and location2 (strait line) if only 2 locations are set, absolute center point if 3 locations are set
+  // get middle point between location1 and location2 (strait line) if only 2 locations are set, absolute center point if 3 or more locations are set
   let midpoint: LngLatLike | undefined = undefined
-  if (location1 && location2 && !location3) {
+  if (location1 && location2) {
     const point1 = turf.point(location1)
     const point2 = turf.point(location2)
     const point1Coords: turf.Coord = point1.geometry.coordinates
@@ -298,6 +402,20 @@ export default function MapBox(): JSX.Element {
   }
   if (location1 && location2 && location3) {
     const features = turf.points([location1, location2, location3])
+    midpoint = turf.center(features).geometry.coordinates as LngLatLike
+  }
+  if (location1 && location2 && location3 && location4) {
+    const features = turf.points([location1, location2, location3, location4])
+    midpoint = turf.center(features).geometry.coordinates as LngLatLike
+  }
+  if (location1 && location2 && location3 && location4 && location5) {
+    const features = turf.points([
+      location1,
+      location2,
+      location3,
+      location4,
+      location5,
+    ])
     midpoint = turf.center(features).geometry.coordinates as LngLatLike
   }
 
@@ -411,6 +529,16 @@ export default function MapBox(): JSX.Element {
       setLocationName3(locationName)
       localStorage.setItem('Location3', JSON.stringify(locationName))
       localStorage.setItem('Location3Coords', JSON.stringify(location))
+    } else if (!location4) {
+      setLocation3(location)
+      setLocationName3(locationName)
+      localStorage.setItem('Location4', JSON.stringify(locationName))
+      localStorage.setItem('Location4Coords', JSON.stringify(location))
+    } else if (!location5) {
+      setLocation3(location)
+      setLocationName3(locationName)
+      localStorage.setItem('Location5', JSON.stringify(locationName))
+      localStorage.setItem('Location5Coords', JSON.stringify(location))
     } else {
       alert('both locations are set')
     }
@@ -420,9 +548,13 @@ export default function MapBox(): JSX.Element {
     setLocation1(null)
     setLocation2(null)
     setLocation3(null)
+    setLocation4(null)
+    setLocation5(null)
     setLocationName1('')
     setLocationName2('')
     setLocationName3('')
+    setLocationName4('')
+    setLocationName5('')
   }
   // switch to the other page
   function showMap() {
@@ -446,7 +578,7 @@ export default function MapBox(): JSX.Element {
 
   middle ? localStorage.setItem('middleLng', JSON.stringify(middle[0])) : null
   middle ? localStorage.setItem('middleLat', JSON.stringify(middle[1])) : null
-  location1 && location2 ? getRoute(location1, location2) : null
+  location1 && location2 ? getRoute() : null
 
   const navigate = useNavigate()
 
