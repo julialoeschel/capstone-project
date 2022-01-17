@@ -7,7 +7,7 @@
     "server:dev": "ts-node-dev --respawn --transpile-only --project tsconfig.server.json src/server.ts",
     "server:build": "tsc --project tsconfig.server.json",
     "build": "npm run server:build && npm run client:build && npm run storybook:build",
-    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\" \"npm run storybook\"",
+    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\" ",
     "serve": "vite preview",
     "prepare": "husky install",
     "test": "prettier --check . && eslint . && stylelint \"**/*.css\"",

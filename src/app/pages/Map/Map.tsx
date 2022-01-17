@@ -47,7 +47,7 @@ export default function MapBox(): JSX.Element {
       )
       localStorage.setItem('CominFromDetailsPage', 'false')
     }
-
+    //add map
     if (map && map.current) return
     map.current = new mapboxgl.Map({
       container: mapContainer.current as HTMLElement,
