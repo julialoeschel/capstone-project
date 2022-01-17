@@ -33,6 +33,7 @@ export default function MapBox(): JSX.Element {
   const [locationName2, setLocationName2] = useState<string>('')
   const [location1, setLocation1] = useState<GeoJSON.Position | null>(null)
   const [location2, setLocation2] = useState<GeoJSON.Position | null>(null)
+  const [location3, setLocation3] = useState<GeoJSON.Position | null>(null)
   const [showMapPage, setShowMapPage] = useState<boolean>(true)
 
   // initialize map only once
@@ -114,6 +115,20 @@ export default function MapBox(): JSX.Element {
           geometry: {
             type: 'Point',
             coordinates: location1 as GeoJSON.Position,
+          },
+        },
+      ],
+    }
+
+    const thirdData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'Point',
+            coordinates: location3 as GeoJSON.Position,
           },
         },
       ],
@@ -218,6 +233,37 @@ export default function MapBox(): JSX.Element {
                 geometry: {
                   type: 'Point',
                   coordinates: location2,
+                },
+              },
+            ],
+          },
+        },
+        paint: {
+          'circle-radius': 10,
+          'circle-color': '#ceb372',
+          'circle-blur': 0.5,
+        },
+      })
+    }
+    //draw point on location 3 (extra point)
+    const mapThirdSource = map.current?.getSource('third')
+    if (mapThirdSource?.type === 'geojson') {
+      mapThirdSource.setData(thirdData)
+    } else if (location3) {
+      map.current?.addLayer({
+        id: 'third',
+        type: 'circle',
+        source: {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: [
+              {
+                type: 'Feature',
+                properties: {},
+                geometry: {
+                  type: 'Point',
+                  coordinates: location3,
                 },
               },
             ],
@@ -349,6 +395,10 @@ export default function MapBox(): JSX.Element {
       setLocationName2(locationName)
       localStorage.setItem('Location2', JSON.stringify(locationName))
       localStorage.setItem('Location2Coords', JSON.stringify(location))
+    } else if (!location3) {
+      setLocation3(location)
+      //The visual points are all missing here - do it later pls
+      localStorage.setItem('Location3Coords', JSON.stringify(location))
     } else {
       alert('both locations are set')
     }
