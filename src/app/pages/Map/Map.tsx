@@ -282,9 +282,9 @@ export default function MapBox(): JSX.Element {
     }
   }
 
-  // get middle point between location1 and location2 (strait line)
+  // get middle point between location1 and location2 (strait line) if only 2 locations are set, absolute center point if 3 locations are set
   let midpoint: LngLatLike | undefined = undefined
-  if (location1 && location2) {
+  if (location1 && location2 && !location3) {
     const point1 = turf.point(location1)
     const point2 = turf.point(location2)
     const point1Coords: turf.Coord = point1.geometry.coordinates
@@ -292,6 +292,10 @@ export default function MapBox(): JSX.Element {
 
     midpoint = turf.midpoint(point1Coords, point2Coords).geometry
       .coordinates as LngLatLike
+  }
+  if (location1 && location2 && location3) {
+    const features = turf.points([location1, location2, location3])
+    midpoint = turf.center(features).geometry.coordinates as LngLatLike
   }
 
   //set marker
