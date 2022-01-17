@@ -31,8 +31,10 @@ export default function MapBox(): JSX.Element {
   const [locationName, setLocationName] = useState<string>('')
   const [locationName1, setLocationName1] = useState<string>('')
   const [locationName2, setLocationName2] = useState<string>('')
+  const [locationName3, setLocationName3] = useState<string>('')
   const [location1, setLocation1] = useState<GeoJSON.Position | null>(null)
   const [location2, setLocation2] = useState<GeoJSON.Position | null>(null)
+  const [location3, setLocation3] = useState<GeoJSON.Position | null>(null)
   const [showMapPage, setShowMapPage] = useState<boolean>(true)
 
   // initialize map only once
@@ -45,9 +47,12 @@ export default function MapBox(): JSX.Element {
       setLocation2(
         JSON.parse(localStorage.getItem('Location2Coords') as string)
       )
+      setLocation3(
+        JSON.parse(localStorage.getItem('Location3Coords') as string)
+      )
       localStorage.setItem('CominFromDetailsPage', 'false')
     }
-
+    //add map
     if (map && map.current) return
     map.current = new mapboxgl.Map({
       container: mapContainer.current as HTMLElement,
@@ -119,6 +124,20 @@ export default function MapBox(): JSX.Element {
       ],
     }
 
+    const thirdData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'Point',
+            coordinates: location3 as GeoJSON.Position,
+          },
+        },
+      ],
+    }
+
     const endData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
       type: 'FeatureCollection',
       features: [
@@ -145,6 +164,7 @@ export default function MapBox(): JSX.Element {
       )
     }
     //make route
+    /*
     const mapRouteSource = map.current?.getSource('route')
 
     if (mapRouteSource?.type === 'geojson') {
@@ -168,6 +188,8 @@ export default function MapBox(): JSX.Element {
         },
       })
     }
+    */
+
     //draw point on location 1
     const mapPointSource = map.current?.getSource('point')
     if (mapPointSource?.type === 'geojson') {
@@ -230,11 +252,42 @@ export default function MapBox(): JSX.Element {
         },
       })
     }
+    //draw point on location 3 (extra point)
+    const mapThirdSource = map.current?.getSource('third')
+    if (mapThirdSource?.type === 'geojson') {
+      mapThirdSource.setData(thirdData)
+    } else if (location3) {
+      map.current?.addLayer({
+        id: 'third',
+        type: 'circle',
+        source: {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: [
+              {
+                type: 'Feature',
+                properties: {},
+                geometry: {
+                  type: 'Point',
+                  coordinates: location3,
+                },
+              },
+            ],
+          },
+        },
+        paint: {
+          'circle-radius': 10,
+          'circle-color': '#ceb372',
+          'circle-blur': 0.5,
+        },
+      })
+    }
   }
 
-  // get middle point between location1 and location2 (strait line)
+  // get middle point between location1 and location2 (strait line) if only 2 locations are set, absolute center point if 3 locations are set
   let midpoint: LngLatLike | undefined = undefined
-  if (location1 && location2) {
+  if (location1 && location2 && !location3) {
     const point1 = turf.point(location1)
     const point2 = turf.point(location2)
     const point1Coords: turf.Coord = point1.geometry.coordinates
@@ -242,6 +295,10 @@ export default function MapBox(): JSX.Element {
 
     midpoint = turf.midpoint(point1Coords, point2Coords).geometry
       .coordinates as LngLatLike
+  }
+  if (location1 && location2 && location3) {
+    const features = turf.points([location1, location2, location3])
+    midpoint = turf.center(features).geometry.coordinates as LngLatLike
   }
 
   //set marker
@@ -349,6 +406,11 @@ export default function MapBox(): JSX.Element {
       setLocationName2(locationName)
       localStorage.setItem('Location2', JSON.stringify(locationName))
       localStorage.setItem('Location2Coords', JSON.stringify(location))
+    } else if (!location3) {
+      setLocation3(location)
+      setLocationName3(locationName)
+      localStorage.setItem('Location3', JSON.stringify(locationName))
+      localStorage.setItem('Location3Coords', JSON.stringify(location))
     } else {
       alert('both locations are set')
     }
@@ -357,8 +419,10 @@ export default function MapBox(): JSX.Element {
   function onClear() {
     setLocation1(null)
     setLocation2(null)
+    setLocation3(null)
     setLocationName1('')
     setLocationName2('')
+    setLocationName3('')
   }
   // switch to the other page
   function showMap() {
@@ -408,6 +472,7 @@ export default function MapBox(): JSX.Element {
           <YourLocationInput
             locationName1={locationName1}
             locationName2={locationName2}
+            locationName3={locationName3}
           />
           <NavigationContainerMap>
             <NavigationButton onClick={() => showMap()}>

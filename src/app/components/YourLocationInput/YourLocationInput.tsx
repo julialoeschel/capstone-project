@@ -5,11 +5,13 @@ import ArrowYellow from '../ArrowYellow/ArrowYellow'
 type YourLocationInputProps = {
   locationName1: string
   locationName2: string
+  locationName3?: string
 }
 
 export default function YourLocationInput({
   locationName1,
   locationName2,
+  locationName3,
 }: YourLocationInputProps): JSX.Element {
   return (
     <Container>
@@ -18,6 +20,12 @@ export default function YourLocationInput({
       <Location1>{locationName1}</Location1>
       <ArrowYellow />
       <Location2>{locationName2}</Location2>
+
+      {locationName3 && (
+        <>
+          <ArrowYellow /> <Location3>{locationName3}</Location3>
+        </>
+      )}
     </Container>
   )
 }
@@ -34,7 +42,8 @@ const Container = styled.div`
   grid-template-areas:
     'text text'
     '. location1'
-    '. location2';
+    '. location2'
+    '. location3';
   @media only screen and (min-width: 640px) {
     grid-template-columns: 20% 80%;
   }
@@ -69,6 +78,22 @@ const Location2 = styled.span`
     justify-self: center;
   }
 `
+const Location3 = styled.span`
+  padding: 10px;
+  width: 13em;
+  min-height: 2.9em;
+  text-align: center;
+  border: solid 3px var(--color-gold);
+  background-color: var(--color-green-100);
+  margin: 15px 0;
+  border-radius: 0.4em;
+  grid-area: location3;
+  box-shadow: var(--box-shadow);
+  @media only screen and (min-width: 640px) {
+    justify-self: center;
+  }
+`
+
 const Text = styled.span`
   grid-area: text;
   font-weight: lighter;
