@@ -328,7 +328,7 @@ export default function MapBox(): JSX.Element {
     const mapFourSource = map.current?.getSource('fourth')
     if (mapFourSource?.type === 'geojson') {
       mapFourSource.setData(fourthData)
-    } else if (location3) {
+    } else if (location4) {
       map.current?.addLayer({
         id: 'fourth',
         type: 'circle',
@@ -360,7 +360,7 @@ export default function MapBox(): JSX.Element {
     const mapFiveSource = map.current?.getSource('five')
     if (mapFiveSource?.type === 'geojson') {
       mapFiveSource.setData(fivthData)
-    } else if (location3) {
+    } else if (location5) {
       map.current?.addLayer({
         id: 'five',
         type: 'circle',
@@ -530,13 +530,13 @@ export default function MapBox(): JSX.Element {
       localStorage.setItem('Location3', JSON.stringify(locationName))
       localStorage.setItem('Location3Coords', JSON.stringify(location))
     } else if (!location4) {
-      setLocation3(location)
-      setLocationName3(locationName)
+      setLocation4(location)
+      setLocationName4(locationName)
       localStorage.setItem('Location4', JSON.stringify(locationName))
       localStorage.setItem('Location4Coords', JSON.stringify(location))
     } else if (!location5) {
-      setLocation3(location)
-      setLocationName3(locationName)
+      setLocation5(location)
+      setLocationName5(locationName)
       localStorage.setItem('Location5', JSON.stringify(locationName))
       localStorage.setItem('Location5Coords', JSON.stringify(location))
     } else {
@@ -569,10 +569,16 @@ export default function MapBox(): JSX.Element {
       setShowMapPage(!showMapPage)
       setLocation1(null)
       setLocation2(null)
+      setLocation3(null)
+      setLocation4(null)
+      setLocation5(null)
       setLocationName1('')
       setLocationName2('')
+      setLocationName3('')
+      setLocationName4('')
+      setLocationName5('')
     } else {
-      alert('please set both inputs')
+      alert('please set two inputs or more. maximum number of inputs is 5.')
     }
   }
 
@@ -605,6 +611,8 @@ export default function MapBox(): JSX.Element {
             locationName1={locationName1}
             locationName2={locationName2}
             locationName3={locationName3}
+            locationName4={locationName4}
+            locationName5={locationName5}
           />
           <NavigationContainerMap>
             <NavigationButton onClick={() => showMap()}>
