@@ -164,6 +164,7 @@ export default function MapBox(): JSX.Element {
       )
     }
     //make route
+    /*
     const mapRouteSource = map.current?.getSource('route')
 
     if (mapRouteSource?.type === 'geojson') {
@@ -187,6 +188,8 @@ export default function MapBox(): JSX.Element {
         },
       })
     }
+    */
+
     //draw point on location 1
     const mapPointSource = map.current?.getSource('point')
     if (mapPointSource?.type === 'geojson') {
