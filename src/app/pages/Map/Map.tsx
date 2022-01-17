@@ -31,6 +31,7 @@ export default function MapBox(): JSX.Element {
   const [locationName, setLocationName] = useState<string>('')
   const [locationName1, setLocationName1] = useState<string>('')
   const [locationName2, setLocationName2] = useState<string>('')
+  const [locationName3, setLocationName3] = useState<string>('')
   const [location1, setLocation1] = useState<GeoJSON.Position | null>(null)
   const [location2, setLocation2] = useState<GeoJSON.Position | null>(null)
   const [location3, setLocation3] = useState<GeoJSON.Position | null>(null)
@@ -45,6 +46,9 @@ export default function MapBox(): JSX.Element {
       )
       setLocation2(
         JSON.parse(localStorage.getItem('Location2Coords') as string)
+      )
+      setLocation3(
+        JSON.parse(localStorage.getItem('Location3Coords') as string)
       )
       localStorage.setItem('CominFromDetailsPage', 'false')
     }
@@ -397,7 +401,8 @@ export default function MapBox(): JSX.Element {
       localStorage.setItem('Location2Coords', JSON.stringify(location))
     } else if (!location3) {
       setLocation3(location)
-      //The visual points are all missing here - do it later pls
+      setLocationName3(locationName)
+      localStorage.setItem('Location3', JSON.stringify(locationName))
       localStorage.setItem('Location3Coords', JSON.stringify(location))
     } else {
       alert('both locations are set')
@@ -407,8 +412,10 @@ export default function MapBox(): JSX.Element {
   function onClear() {
     setLocation1(null)
     setLocation2(null)
+    setLocation3(null)
     setLocationName1('')
     setLocationName2('')
+    setLocationName3('')
   }
   // switch to the other page
   function showMap() {
@@ -458,6 +465,7 @@ export default function MapBox(): JSX.Element {
           <YourLocationInput
             locationName1={locationName1}
             locationName2={locationName2}
+            locationName3={locationName3}
           />
           <NavigationContainerMap>
             <NavigationButton onClick={() => showMap()}>
