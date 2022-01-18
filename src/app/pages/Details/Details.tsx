@@ -12,6 +12,15 @@ export default function Details(): JSX.Element {
   const middleLat = JSON.parse(localStorage.getItem('middleLat') as string)
   const locationName1 = JSON.parse(localStorage.getItem('Location1') as string)
   const locationName2 = JSON.parse(localStorage.getItem('Location2') as string)
+  const locationName3 = localStorage.getItem('Location3')
+    ? JSON.parse(localStorage.getItem('Location3') as string)
+    : null
+  const locationName4 = localStorage.getItem('Location4')
+    ? JSON.parse(localStorage.getItem('Location4') as string)
+    : null
+  const locationName5 = localStorage.getItem('Location5')
+    ? JSON.parse(localStorage.getItem('Location5') as string)
+    : null
 
   localStorage.setItem('CominFromDetailsPage', 'true')
 
@@ -26,6 +35,9 @@ export default function Details(): JSX.Element {
         <BoxHeading>My locations</BoxHeading>
         <Location>{locationName1}</Location>
         <Location>{locationName2}</Location>
+        {locationName3 && <Location>{locationName3}</Location>}
+        {locationName4 && <Location>{locationName4}</Location>}
+        {locationName5 && <Location>{locationName5}</Location>}
       </MyLocationsContainer>
       <PlaceContainer>
         <BoxHeading>meet you here</BoxHeading>
