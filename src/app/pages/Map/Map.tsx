@@ -51,17 +51,25 @@ export default function MapBox(): JSX.Element {
       setLocation2(
         JSON.parse(localStorage.getItem('Location2Coords') as string)
       )
-      setLocation3(
-        JSON.parse(localStorage.getItem('Location3Coords') as string)
-      )
-      setLocation4(
-        JSON.parse(localStorage.getItem('Location4Coords') as string)
-      )
-      setLocation5(
-        JSON.parse(localStorage.getItem('Location5Coords') as string)
-      )
+      localStorage.getItem('Location3Coords') != ''
+        ? setLocation3(
+            JSON.parse(localStorage.getItem('Location3Coords') as string)
+          )
+        : null
+      localStorage.getItem('Location4Coords') != ''
+        ? setLocation4(
+            JSON.parse(localStorage.getItem('Location4Coords') as string)
+          )
+        : null
+      localStorage.getItem('Location5Coords') != ''
+        ? setLocation5(
+            JSON.parse(localStorage.getItem('Location5Coords') as string)
+          )
+        : null
+      setMarkertoMidpoint()
       localStorage.setItem('CominFromDetailsPage', 'false')
     }
+
     //add map
     if (map && map.current) return
     map.current = new mapboxgl.Map({
@@ -390,43 +398,51 @@ export default function MapBox(): JSX.Element {
   }
 
   // get middle point between location1 and location2 (strait line) if only 2 locations are set, absolute center point if 3 or more locations are set
-  let midpoint: LngLatLike | undefined = undefined
-  if (location1 && location2) {
-    const point1 = turf.point(location1)
-    const point2 = turf.point(location2)
-    const point1Coords: turf.Coord = point1.geometry.coordinates
-    const point2Coords: turf.Coord = point2?.geometry.coordinates
+  let midpoint: LngLatLike | undefined = JSON.parse(
+    localStorage.getItem('midpoint') as string
+  )
+  function setCenterCoordinates() {
+    if (location1 && location2 && !location3) {
+      const point1 = turf.point(location1)
+      const point2 = turf.point(location2)
+      const point1Coords: turf.Coord = point1.geometry.coordinates
+      const point2Coords: turf.Coord = point2?.geometry.coordinates
 
-    midpoint = turf.midpoint(point1Coords, point2Coords).geometry
-      .coordinates as LngLatLike
-  }
-  if (location1 && location2 && location3) {
-    const features = turf.points([location1, location2, location3])
-    midpoint = turf.center(features).geometry.coordinates as LngLatLike
-  }
-  if (location1 && location2 && location3 && location4) {
-    const features = turf.points([location1, location2, location3, location4])
-    midpoint = turf.center(features).geometry.coordinates as LngLatLike
-  }
-  if (location1 && location2 && location3 && location4 && location5) {
-    const features = turf.points([
-      location1,
-      location2,
-      location3,
-      location4,
-      location5,
-    ])
-    midpoint = turf.center(features).geometry.coordinates as LngLatLike
+      midpoint = turf.midpoint(point1Coords, point2Coords).geometry
+        .coordinates as LngLatLike
+    }
+    if (location1 && location2 && location3 && !location4) {
+      const features = turf.points([location1, location2, location3])
+      midpoint = turf.center(features).geometry.coordinates as LngLatLike
+    }
+    if (location1 && location2 && location3 && location4 && !location5) {
+      const features = turf.points([location1, location2, location3, location4])
+      midpoint = turf.center(features).geometry.coordinates as LngLatLike
+    }
+    if (location1 && location2 && location3 && location4 && location5) {
+      const features = turf.points([
+        location1,
+        location2,
+        location3,
+        location4,
+        location5,
+      ])
+      midpoint = turf.center(features).geometry.coordinates as LngLatLike
+    }
+    localStorage.setItem('midpoint', JSON.stringify(midpoint))
   }
 
   //set marker
-  map.current && midpoint
-    ? new mapboxgl.Marker({ color: '#2b5113' })
-        .setLngLat(midpoint)
-        .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(`<p>Center</p>`))
-        .addTo(map.current)
-    : null
-  const middle: number[] = midpoint as number[]
+  function setMarkertoMidpoint() {
+    map.current && midpoint
+      ? new mapboxgl.Marker({ color: '#2b5113' })
+          .setLngLat(midpoint)
+          .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(`<p>Center</p>`))
+          .addTo(map.current)
+      : null
+    console.log('marker set')
+  }
+  const middle: number[] | null = midpoint ? (midpoint as number[]) : null
 
   //get POI / hotels und  Unterkünfte 25 stk
   async function getPOI(
@@ -504,7 +520,7 @@ export default function MapBox(): JSX.Element {
   const radius = parseInt(localStorage.getItem('Radius') as string)
   const categorie = parseInt(localStorage.getItem('ActiveSearchTag') as string)
 
-  if (midpoint) {
+  if (midpoint && middle) {
     const LongCoords = middle[0] as number
     const LatCoords = middle[1] as number
     getPOI(LatCoords, LongCoords, radius, categorie)
@@ -519,6 +535,14 @@ export default function MapBox(): JSX.Element {
       localStorage.setItem('Location1Coords', JSON.stringify(location))
       localStorage.setItem('Radius', '')
       localStorage.setItem('ActiveSearchTag', '')
+      localStorage.setItem('Location2', '')
+      localStorage.setItem('Location2Coords', '')
+      localStorage.setItem('Location3', '')
+      localStorage.setItem('Location3Coords', '')
+      localStorage.setItem('Location4', '')
+      localStorage.setItem('Location4Coords', '')
+      localStorage.setItem('Location5', '')
+      localStorage.setItem('Location5Coords', '')
     } else if (!location2) {
       setLocation2(location)
       setLocationName2(locationName)
@@ -540,7 +564,7 @@ export default function MapBox(): JSX.Element {
       localStorage.setItem('Location5', JSON.stringify(locationName))
       localStorage.setItem('Location5Coords', JSON.stringify(location))
     } else {
-      alert('both locations are set')
+      alert('you can set up to 5 locations, you already reached the maximum')
     }
   }
   // if click on clear
@@ -565,6 +589,8 @@ export default function MapBox(): JSX.Element {
       setShowMapPage(!showMapPage)
       localStorage.setItem('Radius', '0')
       localStorage.setItem('ActiveSearchTag', '')
+      setCenterCoordinates()
+      setMarkertoMidpoint()
     } else if (showMapPage) {
       setShowMapPage(!showMapPage)
       setLocation1(null)
