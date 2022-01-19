@@ -212,7 +212,7 @@ export default function MapBox(): JSX.Element {
       )
     }
     if (map.current && location1 && location2 && location3) {
-      var line = turf.lineString([location1, location2, location3])
+      const line = turf.lineString([location1, location2, location3])
       const sw = [turf.bbox(line)[0], turf.bbox(line)[1]]
       const ne = [turf.bbox(line)[2], turf.bbox(line)[3]]
 
