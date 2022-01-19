@@ -211,6 +211,15 @@ export default function MapBox(): JSX.Element {
         }
       )
     }
+    if (map.current && location1 && location2 && location3) {
+      var line = turf.lineString([location1, location2, location3])
+      const sw = [turf.bbox(line)[0], turf.bbox(line)[1]]
+      const ne = [turf.bbox(line)[2], turf.bbox(line)[3]]
+
+      map.current.fitBounds([sw as LngLatLike, ne as LngLatLike], {
+        padding: { top: 100, bottom: 100, left: 100, right: 100 },
+      })
+    }
     //make route
     /*
     const mapRouteSource = map.current?.getSource('route')
@@ -440,7 +449,6 @@ export default function MapBox(): JSX.Element {
           .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(`<p>Center</p>`))
           .addTo(map.current)
       : null
-    console.log('marker set')
   }
   const middle: number[] | null = midpoint ? (midpoint as number[]) : null
 
