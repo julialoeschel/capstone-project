@@ -200,6 +200,8 @@ export default function MapBox(): JSX.Element {
     }
 
     //center map over route
+    let line
+    //2 location are set
     if (map.current && location1 && location2) {
       map.current.fitBounds(
         new mapboxgl.LngLatBounds(
@@ -211,15 +213,31 @@ export default function MapBox(): JSX.Element {
         }
       )
     }
+    //3 locations are set
     if (map.current && location1 && location2 && location3) {
-      const line = turf.lineString([location1, location2, location3])
-      const sw = [turf.bbox(line)[0], turf.bbox(line)[1]]
-      const ne = [turf.bbox(line)[2], turf.bbox(line)[3]]
-
-      map.current.fitBounds([sw as LngLatLike, ne as LngLatLike], {
-        padding: { top: 100, bottom: 100, left: 100, right: 100 },
-      })
+      line = turf.lineString([location1, location2, location3])
     }
+    //4 locations are set
+    if (map.current && location1 && location2 && location3 && location4) {
+      line = turf.lineString([location1, location2, location3, location4])
+    }
+    //5 locations are set
+    if (
+      map.current &&
+      location1 &&
+      location2 &&
+      location3 &&
+      location4 &&
+      location5
+    ) {
+      line = turf.lineString([location1, location2, location3, location4])
+    }
+
+    const sw = [turf.bbox(line)[0], turf.bbox(line)[1]]
+    const ne = [turf.bbox(line)[2], turf.bbox(line)[3]]
+    map.current?.fitBounds([sw as LngLatLike, ne as LngLatLike], {
+      padding: { top: 100, bottom: 100, left: 100, right: 100 },
+    })
 
     //make route
     /*
