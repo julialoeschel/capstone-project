@@ -220,6 +220,7 @@ export default function MapBox(): JSX.Element {
         padding: { top: 100, bottom: 100, left: 100, right: 100 },
       })
     }
+
     //make route
     /*
     const mapRouteSource = map.current?.getSource('route')
