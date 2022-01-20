@@ -96,110 +96,13 @@ export default function MapBox(): JSX.Element {
       setLocation(location)
       setLocationName(locationName)
     })
-  })
+  }, [])
 
   map.current?.once('load', () => {
     map.current?.resize()
   })
-
-  // get Distance from API
-  async function getRoute() {
-    //start: GeoJSON.Position, end: GeoJSON.Position
-    /*    const startPointLng = start[0]
-    const startPointLat = start[1]
-    const endPointLng = end[0]
-    const endPointLat = end[1]
-
-    const query = await fetch(
-      `https://api.mapbox.com/directions/v5/mapbox/driving/${startPointLng},${startPointLat};${endPointLng},${endPointLat}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`,
-      { method: 'GET' }
-    )
-    const json = await query.json()
-    const data = json.routes[0]
-
-    //setDistance(data.distance)
-    const route = data.geometry.coordinates
-
-    const geojson: GeoJSON.Feature<GeoJSON.Geometry> = {
-      type: 'Feature',
-      properties: {},
-      geometry: {
-        type: 'LineString',
-        coordinates: route,
-      },
-    }
-*/
-    const pointData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
-      type: 'FeatureCollection',
-      features: [
-        {
-          type: 'Feature',
-          properties: {},
-          geometry: {
-            type: 'Point',
-            coordinates: location1 as GeoJSON.Position,
-          },
-        },
-      ],
-    }
-
-    const thirdData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
-      type: 'FeatureCollection',
-      features: [
-        {
-          type: 'Feature',
-          properties: {},
-          geometry: {
-            type: 'Point',
-            coordinates: location3 as GeoJSON.Position,
-          },
-        },
-      ],
-    }
-
-    const endData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
-      type: 'FeatureCollection',
-      features: [
-        {
-          type: 'Feature',
-          properties: {},
-          geometry: {
-            type: 'Point',
-            coordinates: location2 as GeoJSON.Position,
-          },
-        },
-      ],
-    }
-
-    const fourthData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
-      type: 'FeatureCollection',
-      features: [
-        {
-          type: 'Feature',
-          properties: {},
-          geometry: {
-            type: 'Point',
-            coordinates: location4 as GeoJSON.Position,
-          },
-        },
-      ],
-    }
-
-    const fivthData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
-      type: 'FeatureCollection',
-      features: [
-        {
-          type: 'Feature',
-          properties: {},
-          geometry: {
-            type: 'Point',
-            coordinates: location5 as GeoJSON.Position,
-          },
-        },
-      ],
-    }
-
-    //center map over route
+  function centerMapOverLocations() {
+    //center map over locations
     let line
     //2 location are set
     if (map.current && location1 && location2) {
@@ -238,166 +141,237 @@ export default function MapBox(): JSX.Element {
     map.current?.fitBounds([sw as LngLatLike, ne as LngLatLike], {
       padding: { top: 100, bottom: 100, left: 100, right: 100 },
     })
+  }
 
-    //draw point on location 1
-    map.current?.on('load', () => {
-      const mapPointSource = map.current?.getSource('point')
-      if (mapPointSource?.type === 'geojson') {
-        mapPointSource.setData(pointData)
-      } else if (location1) {
-        map.current?.addLayer({
-          id: 'point',
-          type: 'circle',
-          source: {
-            type: 'geojson',
-            data: {
-              type: 'FeatureCollection',
-              features: [
-                {
-                  type: 'Feature',
-                  properties: {},
-                  geometry: {
-                    type: 'Point',
-                    coordinates: location1,
-                  },
-                },
-              ],
-            },
-          },
-          paint: {
-            'circle-radius': 10,
-            'circle-color': '#ceb372',
-            'circle-blur': 0.5,
-          },
-        })
-      }
-      //draw point on location 2 (endpoint)
-      const mapEndSource = map.current?.getSource('end')
-      if (mapEndSource?.type === 'geojson') {
-        mapEndSource.setData(endData)
-      } else if (location2) {
-        map.current?.addLayer({
-          id: 'end',
-          type: 'circle',
-          source: {
-            type: 'geojson',
-            data: {
-              type: 'FeatureCollection',
-              features: [
-                {
-                  type: 'Feature',
-                  properties: {},
-                  geometry: {
-                    type: 'Point',
-                    coordinates: location2,
-                  },
-                },
-              ],
-            },
-          },
-          paint: {
-            'circle-radius': 10,
-            'circle-color': '#ceb372',
-            'circle-blur': 0.5,
-          },
-        })
-      }
-      //draw point on location 3
-      const mapThirdSource = map.current?.getSource('third')
-      if (mapThirdSource?.type === 'geojson') {
-        mapThirdSource.setData(thirdData)
-      } else if (location3) {
-        map.current?.addLayer({
-          id: 'third',
-          type: 'circle',
-          source: {
-            type: 'geojson',
-            data: {
-              type: 'FeatureCollection',
-              features: [
-                {
-                  type: 'Feature',
-                  properties: {},
-                  geometry: {
-                    type: 'Point',
-                    coordinates: location3,
-                  },
-                },
-              ],
-            },
-          },
-          paint: {
-            'circle-radius': 10,
-            'circle-color': '#ceb372',
-            'circle-blur': 0.5,
-          },
-        })
-      }
+  const pointData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'Point',
+          coordinates: location1 as GeoJSON.Position,
+        },
+      },
+    ],
+  }
 
-      //draw point on location 4
-      const mapFourSource = map.current?.getSource('fourth')
-      if (mapFourSource?.type === 'geojson') {
-        mapFourSource.setData(fourthData)
-      } else if (location4) {
-        map.current?.addLayer({
-          id: 'fourth',
-          type: 'circle',
-          source: {
-            type: 'geojson',
-            data: {
-              type: 'FeatureCollection',
-              features: [
-                {
-                  type: 'Feature',
-                  properties: {},
-                  geometry: {
-                    type: 'Point',
-                    coordinates: location4,
-                  },
-                },
-              ],
-            },
-          },
-          paint: {
-            'circle-radius': 10,
-            'circle-color': '#ceb372',
-            'circle-blur': 0.5,
-          },
-        })
-      }
+  const thirdData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'Point',
+          coordinates: location3 as GeoJSON.Position,
+        },
+      },
+    ],
+  }
 
-      //draw point on location 5
-      const mapFiveSource = map.current?.getSource('five')
-      if (mapFiveSource?.type === 'geojson') {
-        mapFiveSource.setData(fivthData)
-      } else if (location5) {
-        map.current?.addLayer({
-          id: 'five',
-          type: 'circle',
-          source: {
-            type: 'geojson',
-            data: {
-              type: 'FeatureCollection',
-              features: [
-                {
-                  type: 'Feature',
-                  properties: {},
-                  geometry: {
-                    type: 'Point',
-                    coordinates: location5,
-                  },
+  const endData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'Point',
+          coordinates: location2 as GeoJSON.Position,
+        },
+      },
+    ],
+  }
+
+  const fourthData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'Point',
+          coordinates: location4 as GeoJSON.Position,
+        },
+      },
+    ],
+  }
+
+  const fivthData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'Point',
+          coordinates: location5 as GeoJSON.Position,
+        },
+      },
+    ],
+  }
+
+  //Draw points on locations
+  function loadLocationsonMap() {
+    const mapPointSource = map.current?.getSource('point')
+    if (mapPointSource?.type === 'geojson') {
+      mapPointSource.setData(pointData)
+      //draw point on location 1
+    } else if (location1) {
+      map.current?.addLayer({
+        id: 'point',
+        type: 'circle',
+        source: {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: [
+              {
+                type: 'Feature',
+                properties: {},
+                geometry: {
+                  type: 'Point',
+                  coordinates: location1,
                 },
-              ],
-            },
+              },
+            ],
           },
-          paint: {
-            'circle-radius': 10,
-            'circle-color': '#ceb372',
-            'circle-blur': 0.5,
+        },
+        paint: {
+          'circle-radius': 10,
+          'circle-color': '#ceb372',
+          'circle-blur': 0.5,
+        },
+      })
+    }
+    //draw point on location 2 (endpoint)
+    const mapEndSource = map.current?.getSource('end')
+    if (mapEndSource?.type === 'geojson') {
+      mapEndSource.setData(endData)
+    } else if (location2) {
+      map.current?.addLayer({
+        id: 'end',
+        type: 'circle',
+        source: {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: [
+              {
+                type: 'Feature',
+                properties: {},
+                geometry: {
+                  type: 'Point',
+                  coordinates: location2,
+                },
+              },
+            ],
           },
-        })
-      }
-    })
+        },
+        paint: {
+          'circle-radius': 10,
+          'circle-color': '#ceb372',
+          'circle-blur': 0.5,
+        },
+      })
+    }
+    //draw point on location 3
+    const mapThirdSource = map.current?.getSource('third')
+    if (mapThirdSource?.type === 'geojson') {
+      mapThirdSource.setData(thirdData)
+    } else if (location3) {
+      map.current?.addLayer({
+        id: 'third',
+        type: 'circle',
+        source: {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: [
+              {
+                type: 'Feature',
+                properties: {},
+                geometry: {
+                  type: 'Point',
+                  coordinates: location3,
+                },
+              },
+            ],
+          },
+        },
+        paint: {
+          'circle-radius': 10,
+          'circle-color': '#ceb372',
+          'circle-blur': 0.5,
+        },
+      })
+    }
+
+    //draw point on location 4
+    const mapFourSource = map.current?.getSource('fourth')
+    if (mapFourSource?.type === 'geojson') {
+      mapFourSource.setData(fourthData)
+    } else if (location4) {
+      map.current?.addLayer({
+        id: 'fourth',
+        type: 'circle',
+        source: {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: [
+              {
+                type: 'Feature',
+                properties: {},
+                geometry: {
+                  type: 'Point',
+                  coordinates: location4,
+                },
+              },
+            ],
+          },
+        },
+        paint: {
+          'circle-radius': 10,
+          'circle-color': '#ceb372',
+          'circle-blur': 0.5,
+        },
+      })
+    }
+
+    //draw point on location 5
+    const mapFiveSource = map.current?.getSource('five')
+    if (mapFiveSource?.type === 'geojson') {
+      mapFiveSource.setData(fivthData)
+    } else if (location5) {
+      map.current?.addLayer({
+        id: 'five',
+        type: 'circle',
+        source: {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: [
+              {
+                type: 'Feature',
+                properties: {},
+                geometry: {
+                  type: 'Point',
+                  coordinates: location5,
+                },
+              },
+            ],
+          },
+        },
+        paint: {
+          'circle-radius': 10,
+          'circle-color': '#ceb372',
+          'circle-blur': 0.5,
+        },
+      })
+    }
   }
 
   // get middle point between location1 and location2 (strait line) if only 2 locations are set, absolute center point if 3 or more locations are set
@@ -593,6 +567,8 @@ export default function MapBox(): JSX.Element {
       localStorage.setItem('ActiveSearchTag', '')
       setCenterCoordinates()
       setMarkertoMidpoint()
+      loadLocationsonMap()
+      centerMapOverLocations()
     } else if (showMapPage) {
       setShowMapPage(!showMapPage)
       setLocation1(null)
@@ -606,13 +582,16 @@ export default function MapBox(): JSX.Element {
       setLocationName4('')
       setLocationName5('')
     } else {
-      alert('please set two inputs or more. maximum number of inputs is 5.')
+      alert('please set two inputs or more. The maximum number of inputs is 5.')
     }
   }
 
   middle ? localStorage.setItem('middleLng', JSON.stringify(middle[0])) : null
   middle ? localStorage.setItem('middleLat', JSON.stringify(middle[1])) : null
-  location1 && location2 ? getRoute() : null
+  map.current?.on('load', () => {
+    loadLocationsonMap()
+    centerMapOverLocations()
+  })
 
   const navigate = useNavigate()
 
