@@ -51,7 +51,7 @@ export default function MapBox(): JSX.Element {
       setLocation2(
         JSON.parse(localStorage.getItem('Location2Coords') as string)
       )
-      localStorage.getItem('Location3Coords') != ''
+      localStorage.getItem('Location3Coords')
         ? setLocation3(
             JSON.parse(localStorage.getItem('Location3Coords') as string)
           )
@@ -79,10 +79,6 @@ export default function MapBox(): JSX.Element {
       zoom: 4.5,
     })
 
-    map.current.once('load', () => {
-      map.current?.resize()
-    })
-
     //add MapControl
     const mapControl = new mapboxgl.NavigationControl()
     map.current.addControl(mapControl)
@@ -102,104 +98,11 @@ export default function MapBox(): JSX.Element {
     })
   }, [])
 
-  // get Distance from API
-  async function getRoute() {
-    //start: GeoJSON.Position, end: GeoJSON.Position
-    /*    const startPointLng = start[0]
-    const startPointLat = start[1]
-    const endPointLng = end[0]
-    const endPointLat = end[1]
-
-    const query = await fetch(
-      `https://api.mapbox.com/directions/v5/mapbox/driving/${startPointLng},${startPointLat};${endPointLng},${endPointLat}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`,
-      { method: 'GET' }
-    )
-    const json = await query.json()
-    const data = json.routes[0]
-
-    //setDistance(data.distance)
-    const route = data.geometry.coordinates
-
-    const geojson: GeoJSON.Feature<GeoJSON.Geometry> = {
-      type: 'Feature',
-      properties: {},
-      geometry: {
-        type: 'LineString',
-        coordinates: route,
-      },
-    }
-*/
-    const pointData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
-      type: 'FeatureCollection',
-      features: [
-        {
-          type: 'Feature',
-          properties: {},
-          geometry: {
-            type: 'Point',
-            coordinates: location1 as GeoJSON.Position,
-          },
-        },
-      ],
-    }
-
-    const thirdData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
-      type: 'FeatureCollection',
-      features: [
-        {
-          type: 'Feature',
-          properties: {},
-          geometry: {
-            type: 'Point',
-            coordinates: location3 as GeoJSON.Position,
-          },
-        },
-      ],
-    }
-
-    const endData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
-      type: 'FeatureCollection',
-      features: [
-        {
-          type: 'Feature',
-          properties: {},
-          geometry: {
-            type: 'Point',
-            coordinates: location2 as GeoJSON.Position,
-          },
-        },
-      ],
-    }
-
-    const fourthData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
-      type: 'FeatureCollection',
-      features: [
-        {
-          type: 'Feature',
-          properties: {},
-          geometry: {
-            type: 'Point',
-            coordinates: location4 as GeoJSON.Position,
-          },
-        },
-      ],
-    }
-
-    const fivthData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
-      type: 'FeatureCollection',
-      features: [
-        {
-          type: 'Feature',
-          properties: {},
-          geometry: {
-            type: 'Point',
-            coordinates: location5 as GeoJSON.Position,
-          },
-        },
-      ],
-    }
-
-    //center map over route
+  map.current?.once('load', () => {
+    map.current?.resize()
+  })
+  function centerMapOverLocations() {
+    //center map over locations
     let line
     //2 location are set
     if (map.current && location1 && location2) {
@@ -238,38 +141,84 @@ export default function MapBox(): JSX.Element {
     map.current?.fitBounds([sw as LngLatLike, ne as LngLatLike], {
       padding: { top: 100, bottom: 100, left: 100, right: 100 },
     })
+  }
 
-    //make route
-    /*
-    const mapRouteSource = map.current?.getSource('route')
+  const pointData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'Point',
+          coordinates: location1 as GeoJSON.Position,
+        },
+      },
+    ],
+  }
 
-    if (mapRouteSource?.type === 'geojson') {
-      mapRouteSource.setData(geojson)
-    } else {
-      map.current?.addLayer({
-        id: 'route',
-        type: 'line',
-        source: {
-          type: 'geojson',
-          data: geojson,
+  const thirdData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'Point',
+          coordinates: location3 as GeoJSON.Position,
         },
-        layout: {
-          'line-join': 'round',
-          'line-cap': 'round',
-        },
-        paint: {
-          'line-color': '#2b5113',
-          'line-width': 5,
-          'line-opacity': 0.75,
-        },
-      })
-    }
-    */
+      },
+    ],
+  }
 
-    //draw point on location 1
+  const endData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'Point',
+          coordinates: location2 as GeoJSON.Position,
+        },
+      },
+    ],
+  }
+
+  const fourthData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'Point',
+          coordinates: location4 as GeoJSON.Position,
+        },
+      },
+    ],
+  }
+
+  const fivthData: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'Point',
+          coordinates: location5 as GeoJSON.Position,
+        },
+      },
+    ],
+  }
+
+  //Draw points on locations
+  function loadLocationsonMap() {
     const mapPointSource = map.current?.getSource('point')
     if (mapPointSource?.type === 'geojson') {
       mapPointSource.setData(pointData)
+      //draw point on location 1
     } else if (location1) {
       map.current?.addLayer({
         id: 'point',
@@ -618,6 +567,8 @@ export default function MapBox(): JSX.Element {
       localStorage.setItem('ActiveSearchTag', '')
       setCenterCoordinates()
       setMarkertoMidpoint()
+      loadLocationsonMap()
+      centerMapOverLocations()
     } else if (showMapPage) {
       setShowMapPage(!showMapPage)
       setLocation1(null)
@@ -631,13 +582,16 @@ export default function MapBox(): JSX.Element {
       setLocationName4('')
       setLocationName5('')
     } else {
-      alert('please set two inputs or more. maximum number of inputs is 5.')
+      alert('please set two inputs or more. The maximum number of inputs is 5.')
     }
   }
 
   middle ? localStorage.setItem('middleLng', JSON.stringify(middle[0])) : null
   middle ? localStorage.setItem('middleLat', JSON.stringify(middle[1])) : null
-  location1 && location2 ? getRoute() : null
+  map.current?.on('load', () => {
+    loadLocationsonMap()
+    centerMapOverLocations()
+  })
 
   const navigate = useNavigate()
 
