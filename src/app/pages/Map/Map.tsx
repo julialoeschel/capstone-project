@@ -51,7 +51,7 @@ export default function MapBox(): JSX.Element {
       setLocation2(
         JSON.parse(localStorage.getItem('Location2Coords') as string)
       )
-      localStorage.getItem('Location3Coords') != ''
+      localStorage.getItem('Location3Coords')
         ? setLocation3(
             JSON.parse(localStorage.getItem('Location3Coords') as string)
           )
@@ -79,10 +79,6 @@ export default function MapBox(): JSX.Element {
       zoom: 4.5,
     })
 
-    map.current.once('load', () => {
-      map.current?.resize()
-    })
-
     //add MapControl
     const mapControl = new mapboxgl.NavigationControl()
     map.current.addControl(mapControl)
@@ -100,7 +96,11 @@ export default function MapBox(): JSX.Element {
       setLocation(location)
       setLocationName(locationName)
     })
-  }, [])
+  })
+
+  map.current?.once('load', () => {
+    map.current?.resize()
+  })
 
   // get Distance from API
   async function getRoute() {
@@ -239,190 +239,165 @@ export default function MapBox(): JSX.Element {
       padding: { top: 100, bottom: 100, left: 100, right: 100 },
     })
 
-    //make route
-    /*
-    const mapRouteSource = map.current?.getSource('route')
-
-    if (mapRouteSource?.type === 'geojson') {
-      mapRouteSource.setData(geojson)
-    } else {
-      map.current?.addLayer({
-        id: 'route',
-        type: 'line',
-        source: {
-          type: 'geojson',
-          data: geojson,
-        },
-        layout: {
-          'line-join': 'round',
-          'line-cap': 'round',
-        },
-        paint: {
-          'line-color': '#2b5113',
-          'line-width': 5,
-          'line-opacity': 0.75,
-        },
-      })
-    }
-    */
-
     //draw point on location 1
-    const mapPointSource = map.current?.getSource('point')
-    if (mapPointSource?.type === 'geojson') {
-      mapPointSource.setData(pointData)
-    } else if (location1) {
-      map.current?.addLayer({
-        id: 'point',
-        type: 'circle',
-        source: {
-          type: 'geojson',
-          data: {
-            type: 'FeatureCollection',
-            features: [
-              {
-                type: 'Feature',
-                properties: {},
-                geometry: {
-                  type: 'Point',
-                  coordinates: location1,
+    map.current?.on('load', () => {
+      const mapPointSource = map.current?.getSource('point')
+      if (mapPointSource?.type === 'geojson') {
+        mapPointSource.setData(pointData)
+      } else if (location1) {
+        map.current?.addLayer({
+          id: 'point',
+          type: 'circle',
+          source: {
+            type: 'geojson',
+            data: {
+              type: 'FeatureCollection',
+              features: [
+                {
+                  type: 'Feature',
+                  properties: {},
+                  geometry: {
+                    type: 'Point',
+                    coordinates: location1,
+                  },
                 },
-              },
-            ],
+              ],
+            },
           },
-        },
-        paint: {
-          'circle-radius': 10,
-          'circle-color': '#ceb372',
-          'circle-blur': 0.5,
-        },
-      })
-    }
-    //draw point on location 2 (endpoint)
-    const mapEndSource = map.current?.getSource('end')
-    if (mapEndSource?.type === 'geojson') {
-      mapEndSource.setData(endData)
-    } else if (location2) {
-      map.current?.addLayer({
-        id: 'end',
-        type: 'circle',
-        source: {
-          type: 'geojson',
-          data: {
-            type: 'FeatureCollection',
-            features: [
-              {
-                type: 'Feature',
-                properties: {},
-                geometry: {
-                  type: 'Point',
-                  coordinates: location2,
+          paint: {
+            'circle-radius': 10,
+            'circle-color': '#ceb372',
+            'circle-blur': 0.5,
+          },
+        })
+      }
+      //draw point on location 2 (endpoint)
+      const mapEndSource = map.current?.getSource('end')
+      if (mapEndSource?.type === 'geojson') {
+        mapEndSource.setData(endData)
+      } else if (location2) {
+        map.current?.addLayer({
+          id: 'end',
+          type: 'circle',
+          source: {
+            type: 'geojson',
+            data: {
+              type: 'FeatureCollection',
+              features: [
+                {
+                  type: 'Feature',
+                  properties: {},
+                  geometry: {
+                    type: 'Point',
+                    coordinates: location2,
+                  },
                 },
-              },
-            ],
+              ],
+            },
           },
-        },
-        paint: {
-          'circle-radius': 10,
-          'circle-color': '#ceb372',
-          'circle-blur': 0.5,
-        },
-      })
-    }
-    //draw point on location 3
-    const mapThirdSource = map.current?.getSource('third')
-    if (mapThirdSource?.type === 'geojson') {
-      mapThirdSource.setData(thirdData)
-    } else if (location3) {
-      map.current?.addLayer({
-        id: 'third',
-        type: 'circle',
-        source: {
-          type: 'geojson',
-          data: {
-            type: 'FeatureCollection',
-            features: [
-              {
-                type: 'Feature',
-                properties: {},
-                geometry: {
-                  type: 'Point',
-                  coordinates: location3,
+          paint: {
+            'circle-radius': 10,
+            'circle-color': '#ceb372',
+            'circle-blur': 0.5,
+          },
+        })
+      }
+      //draw point on location 3
+      const mapThirdSource = map.current?.getSource('third')
+      if (mapThirdSource?.type === 'geojson') {
+        mapThirdSource.setData(thirdData)
+      } else if (location3) {
+        map.current?.addLayer({
+          id: 'third',
+          type: 'circle',
+          source: {
+            type: 'geojson',
+            data: {
+              type: 'FeatureCollection',
+              features: [
+                {
+                  type: 'Feature',
+                  properties: {},
+                  geometry: {
+                    type: 'Point',
+                    coordinates: location3,
+                  },
                 },
-              },
-            ],
+              ],
+            },
           },
-        },
-        paint: {
-          'circle-radius': 10,
-          'circle-color': '#ceb372',
-          'circle-blur': 0.5,
-        },
-      })
-    }
+          paint: {
+            'circle-radius': 10,
+            'circle-color': '#ceb372',
+            'circle-blur': 0.5,
+          },
+        })
+      }
 
-    //draw point on location 4
-    const mapFourSource = map.current?.getSource('fourth')
-    if (mapFourSource?.type === 'geojson') {
-      mapFourSource.setData(fourthData)
-    } else if (location4) {
-      map.current?.addLayer({
-        id: 'fourth',
-        type: 'circle',
-        source: {
-          type: 'geojson',
-          data: {
-            type: 'FeatureCollection',
-            features: [
-              {
-                type: 'Feature',
-                properties: {},
-                geometry: {
-                  type: 'Point',
-                  coordinates: location4,
+      //draw point on location 4
+      const mapFourSource = map.current?.getSource('fourth')
+      if (mapFourSource?.type === 'geojson') {
+        mapFourSource.setData(fourthData)
+      } else if (location4) {
+        map.current?.addLayer({
+          id: 'fourth',
+          type: 'circle',
+          source: {
+            type: 'geojson',
+            data: {
+              type: 'FeatureCollection',
+              features: [
+                {
+                  type: 'Feature',
+                  properties: {},
+                  geometry: {
+                    type: 'Point',
+                    coordinates: location4,
+                  },
                 },
-              },
-            ],
+              ],
+            },
           },
-        },
-        paint: {
-          'circle-radius': 10,
-          'circle-color': '#ceb372',
-          'circle-blur': 0.5,
-        },
-      })
-    }
+          paint: {
+            'circle-radius': 10,
+            'circle-color': '#ceb372',
+            'circle-blur': 0.5,
+          },
+        })
+      }
 
-    //draw point on location 5
-    const mapFiveSource = map.current?.getSource('five')
-    if (mapFiveSource?.type === 'geojson') {
-      mapFiveSource.setData(fivthData)
-    } else if (location5) {
-      map.current?.addLayer({
-        id: 'five',
-        type: 'circle',
-        source: {
-          type: 'geojson',
-          data: {
-            type: 'FeatureCollection',
-            features: [
-              {
-                type: 'Feature',
-                properties: {},
-                geometry: {
-                  type: 'Point',
-                  coordinates: location5,
+      //draw point on location 5
+      const mapFiveSource = map.current?.getSource('five')
+      if (mapFiveSource?.type === 'geojson') {
+        mapFiveSource.setData(fivthData)
+      } else if (location5) {
+        map.current?.addLayer({
+          id: 'five',
+          type: 'circle',
+          source: {
+            type: 'geojson',
+            data: {
+              type: 'FeatureCollection',
+              features: [
+                {
+                  type: 'Feature',
+                  properties: {},
+                  geometry: {
+                    type: 'Point',
+                    coordinates: location5,
+                  },
                 },
-              },
-            ],
+              ],
+            },
           },
-        },
-        paint: {
-          'circle-radius': 10,
-          'circle-color': '#ceb372',
-          'circle-blur': 0.5,
-        },
-      })
-    }
+          paint: {
+            'circle-radius': 10,
+            'circle-color': '#ceb372',
+            'circle-blur': 0.5,
+          },
+        })
+      }
+    })
   }
 
   // get middle point between location1 and location2 (strait line) if only 2 locations are set, absolute center point if 3 or more locations are set
