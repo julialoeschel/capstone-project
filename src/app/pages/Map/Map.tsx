@@ -66,7 +66,6 @@ export default function MapBox(): JSX.Element {
             JSON.parse(localStorage.getItem('Location5Coords') as string)
           )
         : null
-
       localStorage.setItem('CominFromDetailsPage', 'false')
     }
 
@@ -424,7 +423,7 @@ export default function MapBox(): JSX.Element {
   const middle: number[] | null = midpoint ? (midpoint as number[]) : null
 
   //get POI / hotels und  Unterkünfte 25 stk
-  async function getPOI(
+  async function getPOIandRadius(
     lat: number,
     long: number,
     radius: number,
@@ -497,10 +496,14 @@ export default function MapBox(): JSX.Element {
   const radius = parseInt(localStorage.getItem('Radius') as string)
   const categorie = parseInt(localStorage.getItem('ActiveSearchTag') as string)
 
-  if (midpoint && middle) {
+  if (
+    midpoint &&
+    middle &&
+    localStorage.getItem('CominFromDetailsPage') === 'true'
+  ) {
     const LongCoords = middle[0] as number
     const LatCoords = middle[1] as number
-    getPOI(LatCoords, LongCoords, radius, categorie)
+    getPOIandRadius(LatCoords, LongCoords, radius, categorie)
   }
 
   // if locations are set, do
@@ -589,6 +592,7 @@ export default function MapBox(): JSX.Element {
 
   middle ? localStorage.setItem('middleLng', JSON.stringify(middle[0])) : null
   middle ? localStorage.setItem('middleLat', JSON.stringify(middle[1])) : null
+
   map.current?.on('load', () => {
     loadLocationsonMap()
     centerMapOverLocations()
