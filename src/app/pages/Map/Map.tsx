@@ -66,7 +66,7 @@ export default function MapBox(): JSX.Element {
             JSON.parse(localStorage.getItem('Location5Coords') as string)
           )
         : null
-      setMarkertoMidpoint()
+
       localStorage.setItem('CominFromDetailsPage', 'false')
     }
 
@@ -96,11 +96,14 @@ export default function MapBox(): JSX.Element {
       setLocation(location)
       setLocationName(locationName)
     })
+
+    setMarkertoMidpoint()
   }, [])
 
   map.current?.once('load', () => {
     map.current?.resize()
   })
+
   function centerMapOverLocations() {
     //center map over locations
     let line
@@ -416,7 +419,7 @@ export default function MapBox(): JSX.Element {
           .setLngLat(midpoint)
           .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(`<p>Center</p>`))
           .addTo(map.current)
-      : null
+      : console.log('middle marker not set')
   }
   const middle: number[] | null = midpoint ? (midpoint as number[]) : null
 
@@ -478,8 +481,6 @@ export default function MapBox(): JSX.Element {
       else Buffer = 4000
 
       const radiusBuffer = radius + Buffer
-
-      console.log(radiusBuffer)
       const point = turf.point([latitude, longitude])
       const buffered = turf.buffer(point, radiusBuffer, { units: 'meters' })
       return buffered
@@ -502,7 +503,7 @@ export default function MapBox(): JSX.Element {
     getPOI(LatCoords, LongCoords, radius, categorie)
   }
 
-  // if locations are set do
+  // if locations are set, do
   function onSet() {
     if (!location1) {
       setLocation1(location)
