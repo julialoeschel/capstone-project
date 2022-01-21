@@ -40,6 +40,7 @@ export default function MapBox(): JSX.Element {
   const [location4, setLocation4] = useState<GeoJSON.Position | null>(null)
   const [location5, setLocation5] = useState<GeoJSON.Position | null>(null)
   const [showMapPage, setShowMapPage] = useState<boolean>(true)
+  const [insertAlert, setInsertAlert] = useState<boolean>(true)
 
   // initialize map only once
   useEffect(() => {
@@ -67,6 +68,7 @@ export default function MapBox(): JSX.Element {
           )
         : null
       localStorage.setItem('CominFromDetailsPage', 'false')
+      setInsertAlert(true)
     }
 
     //add map
@@ -418,7 +420,7 @@ export default function MapBox(): JSX.Element {
           .setLngLat(midpoint)
           .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(`<p>Center</p>`))
           .addTo(map.current)
-      : console.log('middle marker not set')
+      : null
   }
   const middle: number[] | null = midpoint ? (midpoint as number[]) : null
 
@@ -575,11 +577,11 @@ export default function MapBox(): JSX.Element {
       centerMapOverLocations()
     } else if (showMapPage) {
       setShowMapPage(!showMapPage)
-      setLocation1(null)
-      setLocation2(null)
-      setLocation3(null)
-      setLocation4(null)
-      setLocation5(null)
+      //setLocation1(null)
+      //setLocation2(null)
+      //setLocation3(null)
+      // setLocation4(null)
+      //setLocation5(null)
       setLocationName1('')
       setLocationName2('')
       setLocationName3('')
@@ -602,7 +604,8 @@ export default function MapBox(): JSX.Element {
 
   //navigate to Deatils page
   function switchToMore() {
-    navigate('/Details')
+    location1 ? navigate('/Details') : null
+    location1 ? setInsertAlert(false) : setInsertAlert(!insertAlert)
   }
 
   return (
@@ -636,7 +639,7 @@ export default function MapBox(): JSX.Element {
       <MapPage hidden={showMapPage}>
         <MapContainer ref={mapContainer} className="map-container" />
         <div id="map-popups"></div>
-
+        <Alert hidden={insertAlert}>Insert locations first</Alert>
         <NavigationContainer>
           <NavigationButton onClick={() => showMap()}>
             <NavigationButtonInputIcon />
@@ -730,4 +733,17 @@ const NavigationContainer = styled.div`
   position: relative;
   bottom: 6em;
   right: -1em;
+`
+const Alert = styled.div`
+  position: absolute;
+  border: solid 2px red;
+  border-radius: 0.7em;
+  bottom: 2em;
+  left: 10em;
+  height: 4em;
+  width: 10em;
+  padding: 1em 0.5em;
+  background-color: var(--color-green-100);
+  opacity: 0.7;
+  display: ${(props) => (props.hidden ? 'none' : 'block')};
 `
