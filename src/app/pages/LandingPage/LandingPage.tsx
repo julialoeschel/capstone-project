@@ -12,8 +12,8 @@ export default function LandingPage(): JSX.Element {
   }
 
   function handleClick() {
-    navigate('/MapPage')
     localStorage.clear()
+    navigate('/MapPage')
   }
   return (
     <>
