@@ -40,6 +40,7 @@ export default function MapBox(): JSX.Element {
   const [location4, setLocation4] = useState<GeoJSON.Position | null>(null)
   const [location5, setLocation5] = useState<GeoJSON.Position | null>(null)
   const [showMapPage, setShowMapPage] = useState<boolean>(true)
+  const [insertAlert, setInsertAlert] = useState<boolean>(true)
 
   // initialize map only once
   useEffect(() => {
@@ -66,8 +67,8 @@ export default function MapBox(): JSX.Element {
             JSON.parse(localStorage.getItem('Location5Coords') as string)
           )
         : null
-      setMarkertoMidpoint()
       localStorage.setItem('CominFromDetailsPage', 'false')
+      setInsertAlert(true)
     }
 
     //add map
@@ -96,11 +97,14 @@ export default function MapBox(): JSX.Element {
       setLocation(location)
       setLocationName(locationName)
     })
+
+    setMarkertoMidpoint()
   }, [])
 
   map.current?.once('load', () => {
     map.current?.resize()
   })
+
   function centerMapOverLocations() {
     //center map over locations
     let line
@@ -421,7 +425,7 @@ export default function MapBox(): JSX.Element {
   const middle: number[] | null = midpoint ? (midpoint as number[]) : null
 
   //get POI / hotels und  Unterkünfte 25 stk
-  async function getPOI(
+  async function getPOIandRadius(
     lat: number,
     long: number,
     radius: number,
@@ -478,8 +482,6 @@ export default function MapBox(): JSX.Element {
       else Buffer = 4000
 
       const radiusBuffer = radius + Buffer
-
-      console.log(radiusBuffer)
       const point = turf.point([latitude, longitude])
       const buffered = turf.buffer(point, radiusBuffer, { units: 'meters' })
       return buffered
@@ -496,13 +498,17 @@ export default function MapBox(): JSX.Element {
   const radius = parseInt(localStorage.getItem('Radius') as string)
   const categorie = parseInt(localStorage.getItem('ActiveSearchTag') as string)
 
-  if (midpoint && middle) {
+  if (
+    midpoint &&
+    middle &&
+    localStorage.getItem('CominFromDetailsPage') === 'true'
+  ) {
     const LongCoords = middle[0] as number
     const LatCoords = middle[1] as number
-    getPOI(LatCoords, LongCoords, radius, categorie)
+    getPOIandRadius(LatCoords, LongCoords, radius, categorie)
   }
 
-  // if locations are set do
+  // if locations are set, do
   function onSet() {
     if (!location1) {
       setLocation1(location)
@@ -588,6 +594,7 @@ export default function MapBox(): JSX.Element {
 
   middle ? localStorage.setItem('middleLng', JSON.stringify(middle[0])) : null
   middle ? localStorage.setItem('middleLat', JSON.stringify(middle[1])) : null
+
   map.current?.on('load', () => {
     loadLocationsonMap()
     centerMapOverLocations()
@@ -597,7 +604,8 @@ export default function MapBox(): JSX.Element {
 
   //navigate to Deatils page
   function switchToMore() {
-    navigate('/Details')
+    location1 ? navigate('/Details') : null
+    location1 ? setInsertAlert(false) : setInsertAlert(!insertAlert)
   }
 
   return (
@@ -631,7 +639,7 @@ export default function MapBox(): JSX.Element {
       <MapPage hidden={showMapPage}>
         <MapContainer ref={mapContainer} className="map-container" />
         <div id="map-popups"></div>
-
+        <Alert hidden={insertAlert}>Insert locations first</Alert>
         <NavigationContainer>
           <NavigationButton onClick={() => showMap()}>
             <NavigationButtonInputIcon />
@@ -725,4 +733,17 @@ const NavigationContainer = styled.div`
   position: relative;
   bottom: 6em;
   right: -1em;
+`
+const Alert = styled.div`
+  position: absolute;
+  border: solid 2px red;
+  border-radius: 0.7em;
+  bottom: 2em;
+  left: 10em;
+  height: 4em;
+  width: 10em;
+  padding: 1em 0.5em;
+  background-color: var(--color-green-100);
+  opacity: 0.7;
+  display: ${(props) => (props.hidden ? 'none' : 'block')};
 `
